@@ -1,6 +1,6 @@
 from datetime import datetime
 import pandas as pd
-from ccxt import binance
+import ccxt
 from ccxt.base.errors import NetworkError
 import os
 from fastapi import HTTPException
@@ -9,11 +9,11 @@ from stocksense.util.ccxtdl import download as dl
 from .endpoint import Endpoint
 
 
-class BinanceEndpoint(Endpoint):
-    def __init__(self):
-        super().__init__("binance")
-        self.symbols = list(map(
-            lambda s: s + "/USDT", binance().describe()["options"]["networksById"].values()))
+class CCXTEndpoint(Endpoint):
+    def __init__(self, exchange_name: str):
+        super().__init__(exchange_name)
+        self._exchange = getattr(ccxt, exchange_name)()
+        self.symbols = list(self._exchange.load_markets().keys())
 
     async def get_kline(self, symbol: str, since: datetime, until: datetime, timeframe: str) -> pd.DataFrame:
         """Get K-line data for a symbol

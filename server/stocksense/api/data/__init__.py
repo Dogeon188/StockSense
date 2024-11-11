@@ -1,1 +1,1 @@
-from .main import router, get_endpoints, get_endpoint, get_symbols, get_kline_df
+from .router import router, get_endpoints, get_endpoint, get_symbols, get_kline_df
