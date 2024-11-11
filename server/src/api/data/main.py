@@ -1,6 +1,10 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, HTTPException
+from datetime import datetime
+import pandas as pd
+
 from .endpoint import Endpoint
-from .baostock import BaostockEndpoint
+# from .baostock import BaostockEndpoint
+from .binance import BinanceEndpoint
 
 
 router = APIRouter(
@@ -10,10 +14,78 @@ router = APIRouter(
 )
 
 endpoints: dict[str, Endpoint] = {
-    "baostock": BaostockEndpoint(),
+    # "baostock": BaostockEndpoint(),
+    "binance": BinanceEndpoint(),
 }
 
 
 @router.get("/endpoints")
-async def get_endpoints():
-    return {"endpoints": [endpoint["name"] for endpoint in endpoints]}
+async def get_endpoints() -> dict:
+    """Get all available endpoints
+
+    Returns
+    -------
+    dict
+        A dictionary containing all available endpoints
+    """
+    return {"endpoints": list(endpoints.keys())}
+
+def get_endpoint(endpoint: str) -> Endpoint:
+    if endpoint not in endpoints:
+        raise HTTPException(status_code=404, detail="Endpoint not found")
+    return endpoints[endpoint]
+
+@router.get("/endpoints/{endpoint}/symbols")
+async def get_symbols(endpoint: str) -> list[str]:
+    return get_endpoint(endpoint).list_symbols()
+
+async def get_kline_df(
+    endpoint: str,
+    symbol: str = "BTC/USDT",
+    since: datetime = datetime(2019, 1, 1),
+    until: datetime = datetime(2023, 1, 1),
+    timeframe: str = "1d",
+) -> pd.DataFrame:
+    """Get K-line data for a symbol
+
+    Parameters
+    ----------
+    endpoint : str
+        Name of the endpoint
+    symbol : str
+        Symbol for the K-line data
+    since : str
+        Start date for the K-line data
+    until : str
+        End date for the K-line data
+    timeframe : str
+        Timeframe for K-line data.
+        Defaults to 1d if no parameter provided. Supported windowSize values:  
+            1m,2m....59m for minutes  
+            1h, 2h....23h - for hours  
+            1d...7d - for days.
+
+    Returns
+    -------
+    pd.DataFrame
+        K-line data for the symbol. Contains columns:
+        - date : datetime, beginning of the timeframe
+        - unix : int, unix timestamp of the beginning of the timeframe
+        - open : float, opening price
+        - high : float, highest price
+        - low : float, lowest price
+        - close : float, closing price
+        - volume : float, volume of the asset traded
+    """
+    return await get_endpoint(endpoint).get_kline(symbol, since, until, timeframe)
+
+@router.get("/endpoints/{endpoint}/kline")
+async def get_kline_csv(
+    endpoint: str,
+    symbol: str = "BTC/USDT",
+    since: datetime = datetime(2019, 1, 1),
+    until: datetime = datetime(2020, 1, 1),
+    timeframe: str = "1d",
+) -> str:
+    df = await get_kline_df(endpoint, symbol, since, until, timeframe)
+    return df.to_csv()
