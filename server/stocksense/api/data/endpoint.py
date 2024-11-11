@@ -3,7 +3,7 @@ from datetime import datetime
 import pandas as pd
 import os
 
-from util.singleton import SingletonABCMeta
+from stocksense.util.singleton import SingletonABCMeta
 
 
 class Endpoint(metaclass=SingletonABCMeta):

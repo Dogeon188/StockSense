@@ -20,7 +20,7 @@ endpoints: dict[str, Endpoint] = {
 
 
 @router.get("/endpoints")
-async def get_endpoints() -> dict:
+async def get_endpoints() -> list[str]:
     """Get all available endpoints
 
     Returns
@@ -28,7 +28,7 @@ async def get_endpoints() -> dict:
     dict
         A dictionary containing all available endpoints
     """
-    return {"endpoints": list(endpoints.keys())}
+    return list(endpoints.keys())
 
 def get_endpoint(endpoint: str) -> Endpoint:
     if endpoint not in endpoints:
@@ -41,10 +41,10 @@ async def get_symbols(endpoint: str) -> list[str]:
 
 async def get_kline_df(
     endpoint: str,
-    symbol: str = "BTC/USDT",
-    since: datetime = datetime(2019, 1, 1),
-    until: datetime = datetime(2023, 1, 1),
-    timeframe: str = "1d",
+    symbol: str,
+    since: datetime,
+    until: datetime,
+    timeframe: str
 ) -> pd.DataFrame:
     """Get K-line data for a symbol
 

@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 
-from api import data_router, pilot_router
+from stocksense.api import data_router, pilot_router
 
 
 app = FastAPI(

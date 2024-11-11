@@ -3,9 +3,9 @@ import pandas as pd
 from ccxt import binance
 from ccxt.base.errors import NetworkError
 import os
-from util.ccxtdl import download as dl
 from fastapi import HTTPException
 
+from stocksense.util.ccxtdl import download as dl
 from .endpoint import Endpoint
 
 
@@ -46,7 +46,5 @@ class BinanceEndpoint(Endpoint):
                 since=since,
                 until=until,
             )
-            print(
-                f"{symbol} downloaded from binance and stored at {self._cache_dir}")
         except NetworkError:
             raise HTTPException(status_code=503, detail="Network error: API request failed")
