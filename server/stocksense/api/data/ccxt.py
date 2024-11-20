@@ -8,6 +8,11 @@ from fastapi import HTTPException
 from stocksense.util.ccxtdl import download as dl
 from .endpoint import Endpoint
 
+import warnings
+
+warnings.filterwarnings(
+    "ignore", category=DeprecationWarning, module="ccxt.base.exchange")
+
 
 class CCXTEndpoint(Endpoint):
     def __init__(self, exchange_name: str):
@@ -47,4 +52,5 @@ class CCXTEndpoint(Endpoint):
                 until=until,
             )
         except NetworkError:
-            raise HTTPException(status_code=503, detail="Network error: API request failed")
+            raise HTTPException(
+                status_code=503, detail="Network error: API request failed")
