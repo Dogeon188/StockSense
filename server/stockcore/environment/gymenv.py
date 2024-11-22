@@ -7,8 +7,8 @@ from typing import Any
 # TODO: make all arguments visible here
 
 def make_trading_env(
-    max_episode_steps: int | None = None,
-    disable_env_checker: bool | None = None,
+    max_episode_steps,
+    disable_env_checker,
     **kwargs: Any,
 ) -> _TradingEnv:
     """Make a `TradingEnv` environment. Please refer to :class:`gym_trading_env.environments.TradingEnv` for more information.
@@ -41,8 +41,8 @@ def make_trading_env(
 
 
 def make_multi_dataset_trading_env(
-    max_episode_steps: int | None = None,
-    disable_env_checker: bool | None = None,
+    max_episode_steps,
+    disable_env_checker,
     **kwargs: Any,
 ) -> _MultiDatasetTradingEnv:
     """Make a `MultiDatasetTradingEnv` environment. Please refer to :class:`gym_trading_env.environments.MultiDatasetTradingEnv` for more information.
