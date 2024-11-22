@@ -1,11 +1,10 @@
 <!-- Script -->
 <script lang="ts">
     import { onMount } from 'svelte';
-    import * as d3 from 'd3';
     import { createChart } from 'lightweight-charts';
     import type { IChartApi, ISeriesApi } from 'lightweight-charts';
     import { showAreaChart, showCandlestickChart, createToolTip, preprocessData } from '$lib/chartUtils';
-    import ToolTip from './toolTip.svelte';
+    import ToolTip from './ToolTip.svelte';
 
     let areaSeries: ISeriesApi<'Area'>;
     let candlestickSeries: ISeriesApi<'Candlestick'>;
