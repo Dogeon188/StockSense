@@ -1,14 +1,14 @@
 import gymnasium as _gym
 from gym_trading_env.environments import TradingEnv as _TradingEnv
 from gym_trading_env.environments import MultiDatasetTradingEnv as _MultiDatasetTradingEnv
-from typing import Any
+from typing import Any, Optional
 
 
 # TODO: make all arguments visible here
 
 def make_trading_env(
-    max_episode_steps,
-    disable_env_checker,
+    max_episode_steps: Optional[int] = None,
+    disable_env_checker: Optional[bool] = None,
     **kwargs: Any,
 ) -> _TradingEnv:
     """Make a `TradingEnv` environment. Please refer to :class:`gym_trading_env.environments.TradingEnv` for more information.
@@ -41,8 +41,8 @@ def make_trading_env(
 
 
 def make_multi_dataset_trading_env(
-    max_episode_steps,
-    disable_env_checker,
+    max_episode_steps: Optional[int] = None,
+    disable_env_checker: Optional[bool] = None,
     **kwargs: Any,
 ) -> _MultiDatasetTradingEnv:
     """Make a `MultiDatasetTradingEnv` environment. Please refer to :class:`gym_trading_env.environments.MultiDatasetTradingEnv` for more information.
