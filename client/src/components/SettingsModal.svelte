@@ -1,7 +1,7 @@
 <script lang="ts">
     import '../app.sass';
     import Modal from '$components/Modal.svelte';
-    import { UserConfig } from '$lib/userConfig';
+    import UserConfig from '$lib/userConfig';
 
     let { showSettings = $bindable() } = $props();
     let apiUrl = $state(UserConfig.get('apiUrl')!);

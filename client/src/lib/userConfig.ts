@@ -1,6 +1,6 @@
 import { ClientOnly } from "./utils";
 
-export class UserConfig {
+export default class UserConfig {
     static storage: Storage = undefined!;
 
     static configs = new Map<string, string>();

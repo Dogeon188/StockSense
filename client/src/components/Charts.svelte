@@ -3,14 +3,19 @@
     import { onMount } from 'svelte';
     import { createChart } from 'lightweight-charts';
     import type { IChartApi, ISeriesApi } from 'lightweight-charts';
-    import { showAreaChart, showCandlestickChart, createToolTip, preprocessData } from '$lib/chartUtils';
+    import {
+        showAreaChart,
+        showCandlestickChart,
+        createToolTip,
+        preprocessData,
+    } from '$lib/chartUtils';
     import ToolTip from '$components/ToolTip.svelte';
 
     let areaSeries: ISeriesApi<'Area'>;
     let candlestickSeries: ISeriesApi<'Candlestick'>;
     let chart: IChartApi;
-    let state = { chart: "area" }; // area or kLine
-    let url = "https://raw.githubusercontent.com/ClementPerroud/Gym-Trading-Env/main/examples/data/BTC_USD-Hourly.csv";
+    let state = { chart: 'area' }; // area or kLine
+    let { dataUrl = $bindable('') } = $props();
 
     onMount(async () => {
         const chartOptions = {
@@ -22,23 +27,23 @@
         chart = createChart(document.getElementById('container') as HTMLElement, chartOptions);
 
         chart.applyOptions({
-            timeScale: { borderVisible: false, },
-            rightPriceScale: { 
-                borderVisible: false, 
-                scaleMargins: { top: 0.1, bottom: 0.25, },
+            timeScale: { borderVisible: false },
+            rightPriceScale: {
+                borderVisible: false,
+                scaleMargins: { top: 0.1, bottom: 0.25 },
             },
             crosshair: {
-                horzLine: { visible: false, labelVisible: false, },
-                vertLine: { labelVisible: false, },
+                horzLine: { visible: false, labelVisible: false },
+                vertLine: { labelVisible: false },
             },
             grid: {
-                vertLines: { visible: false, },
-                horzLines: { visible: false, },
+                vertLines: { visible: false },
+                horzLines: { visible: false },
             },
         });
 
         // create areaData
-        let areaData = await preprocessData(url, "area");
+        let areaData = await preprocessData(dataUrl, 'area');
 
         // build AreaChart
         areaSeries = chart.addAreaSeries({
@@ -47,23 +52,22 @@
             lineColor: 'rgba( 38, 166, 154, 1)',
             lineWidth: 2,
         });
-    
+
         areaSeries.setData(areaData);
 
         // create Data
-        let kLineData = await preprocessData(url, "kLine");
+        let kLineData = await preprocessData(dataUrl, 'kLine');
 
         // build KLineChart
         candlestickSeries = chart.addCandlestickSeries({
-            upColor: '#26a69a', 
-            downColor: '#ef5350', 
+            upColor: '#26a69a',
+            downColor: '#ef5350',
             borderVisible: false,
-            wickUpColor: '#26a69a', 
+            wickUpColor: '#26a69a',
             wickDownColor: '#ef5350',
         });
-        
+
         candlestickSeries.setData(kLineData);
-        
 
         chart.timeScale().fitContent();
 
@@ -73,8 +77,21 @@
         // create tool tip
         createToolTip(state, areaSeries, candlestickSeries, chart);
     });
-
 </script>
+
+<!-- MarkUp -->
+
+<div id="container-wrapper">
+    <div id="container">
+        <ToolTip />
+    </div>
+</div>
+<div id="toggle-buttons">
+    <button onclick={() => showAreaChart(state, areaSeries, candlestickSeries)}>AreaChart</button>
+    <button onclick={() => showCandlestickChart(state, areaSeries, candlestickSeries)}
+        >KLineChart</button
+    >
+</div>
 
 <!-- Style -->
 
@@ -98,15 +115,3 @@
         margin-top: 20px;
     }
 </style>
-
-<!-- MarkUp -->
-
-<div id="container-wrapper">
-    <div id="container">
-        <ToolTip/>
-    </div>
-</div>
-<div id="toggle-buttons">
-    <button on:click={() => showAreaChart(state, areaSeries, candlestickSeries)}>AreaChart</button>
-    <button on:click={() => showCandlestickChart(state, areaSeries, candlestickSeries)}>KLineChart</button>
-</div>

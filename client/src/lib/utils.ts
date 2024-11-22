@@ -8,6 +8,5 @@ export function ClientOnly(target: any, ctx: DecoratorContext) {
     if (ctx.kind === 'method') {
         return function () {};
     }
-    console.log(ctx);
     return;
 }
