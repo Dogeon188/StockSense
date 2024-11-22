@@ -1,30 +1,37 @@
-// prevent server side rendering from crashing
-const storage =
-    (typeof (window) !== 'undefined' && typeof (document) !== 'undefined') ?
-        localStorage :
-        null;
+import { ClientOnly } from "./utils";
 
-const userConfigs = new Map<string, string>();
+export class UserConfig {
+    static storage: Storage = undefined!;
 
-function registerUserConfig(key: string, defaultValue: string) {
-    if (!storage) return;
-    const value = storage.getItem(key);
-    if (!value) {
-        storage.setItem(key, defaultValue);
-        userConfigs.set(key, defaultValue);
-    } else {
-        userConfigs.set(key, value);
+    static configs = new Map<string, string>();
+
+    @ClientOnly
+    static init() {
+        UserConfig.storage = window.localStorage;
+    }
+
+    @ClientOnly
+    static get(key: string) {
+        return UserConfig.configs.get(key);
+    }
+
+    @ClientOnly
+    static set(key: string, value: string) {
+        UserConfig.configs.set(key, value);
+        UserConfig.storage.setItem(key, value);
+    }
+
+    @ClientOnly
+    static register(key: string, defaultValue: string) {
+        const value = UserConfig.storage.getItem(key);
+        if (!value) {
+            UserConfig.storage.setItem(key, defaultValue);
+            UserConfig.configs.set(key, defaultValue);
+        } else {
+            UserConfig.configs.set(key, value);
+        }
     }
 }
 
-export function getUserConfig(key: string) {
-    return userConfigs.get(key);
-}
-
-export function setUserConfig(key: string, value: string) {
-    if (!storage) return;
-    userConfigs.set(key, value);
-    storage.setItem(key, value);
-}
-
-registerUserConfig('apiUrl', 'http://localhost:8086');
+UserConfig.init();
+UserConfig.register('apiUrl', 'http://localhost:8086');

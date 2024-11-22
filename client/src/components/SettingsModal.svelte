@@ -1,10 +1,10 @@
 <script lang="ts">
     import '../app.sass';
     import Modal from '$components/Modal.svelte';
-    import { getUserConfig } from '$lib/userConfig';
+    import { UserConfig } from '$lib/userConfig';
 
     let { showSettings = $bindable() } = $props();
-    let apiUrl = $state(getUserConfig('apiUrl')!);
+    let apiUrl = $state(UserConfig.get('apiUrl')!);
     let urlValid = $derived(
         apiUrl?.match(/^https?:\/\/[a-z0-9-]+(\.[a-z0-9-]+)*(:[0-9]+)?(\/.*)?$/i)
     );
@@ -15,7 +15,7 @@
     onclose={() => {
         showSettings = false;
         if (apiUrl) localStorage.setItem('apiUrl', apiUrl);
-        else apiUrl = getUserConfig('apiUrl')!;
+        else apiUrl = UserConfig.get('apiUrl')!;
     }}
 >
     {#snippet header()}
