@@ -4,7 +4,7 @@
     import { createChart } from 'lightweight-charts';
     import type { IChartApi, ISeriesApi } from 'lightweight-charts';
     import { showAreaChart, showCandlestickChart, createToolTip, preprocessData } from '$lib/chartUtils';
-    import ToolTip from './ToolTip.svelte';
+    import ToolTip from '$components/ToolTip.svelte';
 
     let areaSeries: ISeriesApi<'Area'>;
     let candlestickSeries: ISeriesApi<'Candlestick'>;

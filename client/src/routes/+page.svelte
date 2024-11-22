@@ -1,5 +1,5 @@
 <script>
-    import Charts from "../component/Charts.svelte";
+    import Charts from "$components/Charts.svelte";
 </script>
 
 <main>
