@@ -1,6 +1,6 @@
 <script lang="ts">
     import '../app.sass';
-    import Modal from '$components/Modal.svelte';
+    import Modal from './Modal.svelte';
     import UserConfig from '$lib/userConfig';
 
     let { showSettings = $bindable() } = $props();

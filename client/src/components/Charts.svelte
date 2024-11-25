@@ -9,11 +9,12 @@
         createToolTip,
         preprocessData,
     } from '$lib/chartUtils';
-    import ToolTip from '$components/ToolTip.svelte';
+    import ToolTip from './ToolTip.svelte';
 
     let areaSeries: ISeriesApi<'Area'>;
     let candlestickSeries: ISeriesApi<'Candlestick'>;
     let chart: IChartApi;
+    let ChartElement: HTMLElement;
     let state = { chart: 'area' }; // area or kLine
     let { dataUrl = $bindable('') } = $props();
 
@@ -24,7 +25,7 @@
                 background: { color: 'rgba(230, 230, 230, 1)' },
             },
         };
-        chart = createChart(document.getElementById('container') as HTMLElement, chartOptions);
+        chart = createChart(ChartElement as HTMLElement, chartOptions);
 
         chart.applyOptions({
             timeScale: { borderVisible: false },
@@ -82,15 +83,13 @@
 <!-- MarkUp -->
 
 <div id="container-wrapper">
-    <div id="container">
+    <div bind:this={ChartElement} id="container">
         <ToolTip />
     </div>
 </div>
 <div id="toggle-buttons">
     <button onclick={() => showAreaChart(state, areaSeries, candlestickSeries)}>AreaChart</button>
-    <button onclick={() => showCandlestickChart(state, areaSeries, candlestickSeries)}
-        >KLineChart</button
-    >
+    <button onclick={() => showCandlestickChart(state, areaSeries, candlestickSeries)}>KLineChart</button>
 </div>
 
 <!-- Style -->
@@ -104,6 +103,7 @@
     }
 
     #container {
+        flex: 1;
         width: 800px;
         height: 400px;
     }

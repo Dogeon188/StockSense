@@ -12,7 +12,7 @@
     );
 </script>
 
-<main>
+<main >
     <fieldset class="grid" aria-label="Choose data source">
         <label>
             Data Endpoint
@@ -69,7 +69,10 @@
     >
         Get Data
     </button>
-    <Charts bind:dataUrl />
+    <!-- <div style="width: 1000px; height: 800px"> -->
+    <div>
+        <Charts bind:dataUrl/>
+    </div>
 </main>
 
 <style lang="sass">

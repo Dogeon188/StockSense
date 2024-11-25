@@ -136,15 +136,15 @@ export function createToolTip(
             }
 
             let left = param.point.x + container.getClientRects()[0].x;
-            if (left > container.clientWidth + container.getClientRects()[0].x - toolTipWidth) {
-                left =
-                    param.point.x + container.getClientRects()[0].x - toolTipMargin - toolTipWidth;
-            }
+            // if (left > container.clientWidth + container.getClientRects()[0].x - toolTipWidth) {
+            //     left =
+            //         param.point.x + container.getClientRects()[0].x - toolTipMargin - toolTipWidth;
+            // }
 
-            let top = param.point.y - toolTipMargin;
-            if (top > container.clientHeight - toolTipHeight) {
-                top = param.point.y - toolTipHeight - toolTipMargin;
-            }
+            let top = param.point.y + container.getClientRects()[0].y;
+            // if (top > container.clientHeight - toolTipHeight) {
+            //     top = param.point.y - toolTipHeight - toolTipMargin;
+            // }
             toolTip.style.left = left + 'px';
             toolTip.style.top = top + 'px';
         }

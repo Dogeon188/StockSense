@@ -1,5 +1,5 @@
 <script lang="ts">
-    
+    let tt: HTMLElement;
 </script>
 
 <style>
@@ -32,4 +32,4 @@
     }
 </style>
 
-<div id="toolTip"></div>
+<div bind:this={tt} id="toolTip"></div>
