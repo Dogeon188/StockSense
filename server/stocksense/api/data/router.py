@@ -1,4 +1,5 @@
 from fastapi import APIRouter, HTTPException
+from fastapi.responses import PlainTextResponse
 from datetime import datetime
 import pandas as pd
 
@@ -85,7 +86,7 @@ async def get_kline_df(
     return await get_endpoint(endpoint).get_kline(symbol, since, until, timeframe)
 
 
-@router.get("/endpoints/{endpoint}/kline")
+@router.get("/endpoints/{endpoint}/kline", response_class=PlainTextResponse)
 async def get_kline_csv(
     endpoint: str,
     symbol: str = "BTC/USDT",

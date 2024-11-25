@@ -1,27 +1,26 @@
-import type { ISeriesApi, IChartApi } from 'lightweight-charts';
+import type { ISeriesApi, IChartApi, UTCTimestamp, Time } from 'lightweight-charts';
 import * as d3 from 'd3';
 
-export async function preprocessData(url: string, type: string) {
+export async function preprocessData(url: string) {
     let data = await d3.csv(url);
-    let list = [];
-    let prev = '';
-    for (let i = data.length - 1; i >= 0; i--) {
-        let pair =
-            type === 'area'
-                ? { time: data[i].date.split(' ')[0], value: Number(data[i].close) }
-                : {
-                      time: data[i].date.split(' ')[0],
-                      open: Number(data[i].open),
-                      high: Number(data[i].high),
-                      low: Number(data[i].low),
-                      close: Number(data[i].close),
-                  };
-        if (pair.time !== prev) {
-            list.push(pair);
-            prev = pair.time;
-        }
-    }
-    return list;
+    return data
+        .map((d) => ({
+            time: new Date(d.date).getTime() as UTCTimestamp,
+            open: Number(d.open),
+            high: Number(d.high),
+            low: Number(d.low),
+            close: Number(d.close),
+            value: Number(d.close),
+        }))
+        .sort((a, b) => a.time - b.time);
+}
+
+export function LWCTime2Date(time: Time) {
+    return typeof time === 'number'
+        ? new Date(time)
+        : typeof time === 'string'
+          ? new Date(time)
+          : new Date(`${time.year}-${time.month}-${time.day}`);
 }
 
 // show AreaChart
@@ -72,7 +71,8 @@ export function createToolTip(
             tooltipEl.style.display = 'none';
         else {
             tooltipEl.style.display = 'block';
-            const dateStr = param.time;
+            const date = LWCTime2Date(param.time);
+            const dateStr = `${date.toLocaleDateString()} ${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}`;
             const data =
                 state.chart === 'area'
                     ? param.seriesData.get(areaSeries)

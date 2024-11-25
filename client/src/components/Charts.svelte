@@ -2,12 +2,13 @@
 <script lang="ts">
     import { onMount } from 'svelte';
     import { createChart } from 'lightweight-charts';
-    import type { IChartApi, ISeriesApi } from 'lightweight-charts';
+    import type { IChartApi, ISeriesApi, TickMarkType, Time } from 'lightweight-charts';
     import {
         showAreaChart,
         showCandlestickChart,
         createToolTip,
         preprocessData,
+        LWCTime2Date,
     } from '$lib/chartUtils';
     import ToolTip from './ToolTip.svelte';
 
@@ -31,7 +32,24 @@
 
         chart.applyOptions({
             autoSize: true,
-            timeScale: { borderVisible: false },
+            timeScale: {
+                tickMarkFormatter: (time: Time, tickMarkType: TickMarkType, locale: string) => {
+                    const date = LWCTime2Date(time);
+                    switch (tickMarkType) {
+                        case 0: // TickMarkType.Year
+                        case 1: // TickMarkType.Month
+                        case 2: // TickMarkType.DayOfMonth
+                            return date.toLocaleDateString(locale);
+                        case 3: // TickMarkType.Time
+                        case 4: // TickMarkType.TimeWithSeconds
+                            return `${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}`;
+                        default:
+                            return '';
+                    }
+                },
+                timeVisible: true,
+                secondsVisible: false
+            },
             rightPriceScale: {
                 borderVisible: false,
                 scaleMargins: { top: 0.1, bottom: 0.25 },
@@ -46,9 +64,6 @@
             },
         });
 
-        // create areaData
-        let areaData = await preprocessData(dataUrl, 'area');
-
         // build AreaChart
         areaSeries = chart.addAreaSeries({
             topColor: 'rgba( 38, 166, 154, 0.28)',
@@ -56,11 +71,6 @@
             lineColor: 'rgba( 38, 166, 154, 1)',
             lineWidth: 2,
         });
-
-        areaSeries.setData(areaData);
-
-        // create Data
-        let kLineData = await preprocessData(dataUrl, 'kLine');
 
         // build KLineChart
         candlestickSeries = chart.addCandlestickSeries({
@@ -71,8 +81,6 @@
             wickDownColor: '#ef5350',
         });
 
-        candlestickSeries.setData(kLineData);
-
         chart.timeScale().fitContent();
 
         // default -> show only area chart
@@ -80,6 +88,17 @@
 
         // create tool tip
         createToolTip(chartContainer, tooltipEl, chartState, areaSeries, candlestickSeries, chart);
+    });
+
+    $effect(() => {
+        if (dataUrl) {
+            (async () => {
+                let data = await preprocessData(dataUrl);
+                areaSeries.setData(data);
+                candlestickSeries.setData(data);
+                chart.timeScale().fitContent();
+            })();
+        }
     });
 </script>
 
