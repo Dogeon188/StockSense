@@ -1,9 +1,9 @@
 <script lang="ts">
-    let tt: HTMLElement;
+    let { tooltipEl = $bindable() }: { tooltipEl: HTMLDivElement } = $props();
 </script>
 
 <style>
-    #toolTip {
+    div {
         position: absolute;
         background: white;
         border: 1px solid rgba(0, 0, 0, 0.2);
@@ -20,7 +20,7 @@
         text-align: left;
         z-index: 10;
     }
-    #toolTip::after {
+    div::after {
         content: "";
         position: absolute;
         bottom: -5px;
@@ -32,4 +32,4 @@
     }
 </style>
 
-<div bind:this={tt} id="toolTip"></div>
+<div bind:this={tooltipEl}></div>

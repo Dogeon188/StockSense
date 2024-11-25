@@ -11,12 +11,14 @@
     } from '$lib/chartUtils';
     import ToolTip from './ToolTip.svelte';
 
+    let { dataUrl = $bindable('') } = $props();
+
     let areaSeries: ISeriesApi<'Area'>;
     let candlestickSeries: ISeriesApi<'Candlestick'>;
     let chart: IChartApi;
-    let ChartElement: HTMLElement;
-    let state = { chart: 'area' }; // area or kLine
-    let { dataUrl = $bindable('') } = $props();
+    let chartContainer: HTMLElement;
+    let chartState = { chart: 'area' }; // area or kLine
+    let tooltipEl: HTMLDivElement = $state(null)!;
 
     onMount(async () => {
         const chartOptions = {
@@ -25,9 +27,10 @@
                 background: { color: 'rgba(230, 230, 230, 1)' },
             },
         };
-        chart = createChart(ChartElement as HTMLElement, chartOptions);
+        chart = createChart(chartContainer as HTMLElement, chartOptions);
 
         chart.applyOptions({
+            autoSize: true,
             timeScale: { borderVisible: false },
             rightPriceScale: {
                 borderVisible: false,
@@ -76,42 +79,35 @@
         candlestickSeries.applyOptions({ visible: false });
 
         // create tool tip
-        createToolTip(state, areaSeries, candlestickSeries, chart);
+        createToolTip(chartContainer, tooltipEl, chartState, areaSeries, candlestickSeries, chart);
     });
 </script>
 
 <!-- MarkUp -->
 
-<div id="container-wrapper">
-    <div bind:this={ChartElement} id="container">
-        <ToolTip />
+<div>
+    <div bind:this={chartContainer} class="container chart-container">
+        <ToolTip bind:tooltipEl />
     </div>
-</div>
-<div id="toggle-buttons">
-    <button onclick={() => showAreaChart(state, areaSeries, candlestickSeries)}>AreaChart</button>
-    <button onclick={() => showCandlestickChart(state, areaSeries, candlestickSeries)}>KLineChart</button>
+    <div class="container toggle-buttons" role="group">
+        <button onclick={() => showAreaChart(chartState, areaSeries, candlestickSeries)}
+            >AreaChart</button
+        >
+        <button onclick={() => showCandlestickChart(chartState, areaSeries, candlestickSeries)}
+            >KLineChart</button
+        >
+    </div>
 </div>
 
 <!-- Style -->
 
 <style>
-    #container-wrapper {
-        display: flex;
-        justify-content: center;
-        align-items: center;
+    .chart-container {
+        width: 100%;
         height: 400px;
     }
 
-    #container {
-        flex: 1;
-        width: 800px;
-        height: 400px;
-    }
-
-    #toggle-buttons {
-        display: flex;
-        justify-content: center;
-        gap: 10px;
-        margin-top: 20px;
+    .toggle-buttons {
+        width: auto;
     }
 </style>

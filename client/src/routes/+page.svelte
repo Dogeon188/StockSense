@@ -69,10 +69,9 @@
     >
         Get Data
     </button>
-    <!-- <div style="width: 1000px; height: 800px"> -->
-    <div>
-        <Charts bind:dataUrl/>
-    </div>
+    <!-- <div> -->
+    <Charts bind:dataUrl/>
+    <!-- </div> -->
 </main>
 
 <style lang="sass">

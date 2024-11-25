@@ -47,18 +47,16 @@ export function showCandlestickChart(
 }
 
 export function createToolTip(
+    container: HTMLElement,
+    tooltipEl: HTMLElement,
     state: { chart: string },
     areaSeries: ISeriesApi<'Area'>,
     candlestickSeries: ISeriesApi<'Candlestick'>,
     chart: IChartApi
 ) {
-    // create toolTip
-    const container = document.getElementById('container');
     // Create and style the tooltip html element
-    const toolTip = document.getElementById('toolTip');
-    if (!container || !toolTip) return;
-    const toolTipWidth = toolTip.clientWidth;
-    const toolTipHeight = toolTip.clientHeight;
+    const toolTipWidth = tooltipEl.clientWidth;
+    const toolTipHeight = tooltipEl.clientHeight;
     const toolTipMargin = 5;
 
     // update tooltip
@@ -71,9 +69,9 @@ export function createToolTip(
             param.point.y < 0 ||
             param.point.y > container.clientHeight
         )
-            toolTip.style.display = 'none';
+            tooltipEl.style.display = 'none';
         else {
-            toolTip.style.display = 'block';
+            tooltipEl.style.display = 'block';
             const dateStr = param.time;
             const data =
                 state.chart === 'area'
@@ -85,7 +83,7 @@ export function createToolTip(
             });
             if (data === undefined) return;
             if (state.chart === 'area') {
-                toolTip.innerHTML = `<div>
+                tooltipEl.innerHTML = `<div>
                     ${
                         // @ts-ignore
                         formatter.format(data.value)
@@ -98,7 +96,7 @@ export function createToolTip(
                 // @ts-ignore
                 const color = data.close >= data.open ? '#26a69a' : '#ef5350';
 
-                toolTip.innerHTML = `<div>開 = 
+                tooltipEl.innerHTML = `<div>開 = 
                         <span style="color: ${color};">
                             ${
                                 // @ts-ignore
@@ -145,8 +143,8 @@ export function createToolTip(
             // if (top > container.clientHeight - toolTipHeight) {
             //     top = param.point.y - toolTipHeight - toolTipMargin;
             // }
-            toolTip.style.left = left + 'px';
-            toolTip.style.top = top + 'px';
+            tooltipEl.style.left = left + 'px';
+            tooltipEl.style.top = top + 'px';
         }
     });
 }
