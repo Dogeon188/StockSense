@@ -63,7 +63,7 @@ class MultiStockTradingEnv(_gym.Env):
         self._set_dfs(dfs)
         
         self.number_of_stocks = len(dfs)
-        self.action_space = spaces.Box(low=-1, high=1, shape=(self.number_of_stocks+1,), dtype=_np.float32)
+        self.action_space = spaces.Discrete(self.number_of_stocks + 1)
         self.observation_space = spaces.Box(
             -_np.inf,
             _np.inf,
@@ -88,7 +88,7 @@ class MultiStockTradingEnv(_gym.Env):
 
         self._features_columns = [col for col in merged_df.columns if "feature" in col]
         self._nb_features = len(self._features_columns)
-  
+
         self._obs_array = _np.array(merged_df[self._features_columns], dtype= _np.float32)
         self._price_array = [df["close"] for df in self.dfs]
 
@@ -149,10 +149,12 @@ class MultiStockTradingEnv(_gym.Env):
         self._percentages_of_stocks_and_cash = percentages_of_stocks_and_cash
         return
 
-    def _take_action(self, actions):
+    def _take_action(self, actions: int):
         """For now, I just assume that the actions are the percentages of the stocks and cash.
         """
-        percentages_of_stocks_and_cash = list(actions)
+        actions_one_hot: list[int] = [0] * self.action_space.n
+        actions_one_hot[actions] = 1
+        percentages_of_stocks_and_cash = list(actions_one_hot)
         if percentages_of_stocks_and_cash != self._percentages_of_stocks_and_cash:
             self._trade(percentages_of_stocks_and_cash)
 
