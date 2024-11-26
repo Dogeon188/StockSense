@@ -165,3 +165,13 @@ cython_debug/
 logs/
 
 *.pth
+
+
+# LaTeX
+*.aux
+*.fdb_latexmk
+*.fls
+*.synctex.gz
+*.synctex(busy)
+*.pdf
+*.cls
