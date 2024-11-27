@@ -73,76 +73,57 @@ export function createToolTip(
             tooltipEl.style.display = 'block';
             const date = LWCTime2Date(param.time);
             const dateStr = `${date.toLocaleDateString()} ${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}`;
+            interface SeriesData {
+                open: number;
+                high: number;
+                low: number;
+                close: number;
+                time: string | number;
+                value: number;
+            }
             const data =
                 state.chart === 'area'
-                    ? param.seriesData.get(areaSeries)
-                    : param.seriesData.get(candlestickSeries);
+                    ? param.seriesData.get(areaSeries) as SeriesData
+                    : param.seriesData.get(candlestickSeries) as SeriesData;
             const formatter = new Intl.NumberFormat('en-US', {
                 minimumFractionDigits: 2,
                 maximumFractionDigits: 2,
             });
-            if (data === undefined) return;
             if (state.chart === 'area') {
-                tooltipEl.innerHTML = `<div>
-                    ${
-                        // @ts-ignore
-                        formatter.format(data.value)
-                    }
-                    </div>
-                    <div style="font-size: 8px; color: ${'gray'}; text-align: center; "margin-top: 5px;"">
+                tooltipEl.innerHTML = `
+                <div style="text-align: center;">
+                    ${formatter.format(data.value)}
+                </div>
+                <div style="font-size: 8px; color: ${'gray'}; text-align: center; margin-top: 5px;">
                     ${dateStr}
-                    </div>`;
-            } else {
-                // @ts-ignore
+                </div>`;
+            }
+            else {
                 const color = data.close >= data.open ? '#26a69a' : '#ef5350';
-
-                tooltipEl.innerHTML = `<div>開 = 
-                        <span style="color: ${color};">
-                            ${
-                                // @ts-ignore
-                                formatter.format(data.open)
-                            }
-                        </span>
-                    </div>
-                    <div>高 = 
-                        <span style="color: ${color};">
-                            ${
-                                // @ts-ignore
-                                formatter.format(data.high)
-                            }
-                        </span>
-                    </div>
-                    <div>低 = 
-                        <span style="color: ${color};">
-                            ${
-                                // @ts-ignore
-                                formatter.format(data.low)
-                            }
-                        </span>
-                    </div>
-                    <div>收 = 
-                        <span style="color: ${color};">
-                            ${
-                                // @ts-ignore
-                                formatter.format(data.close)
-                            }
-                        </span>
-                    </div>
-                    <div style="font-size: 8px; color: ${'gray'}; text-align: center; "margin-top: 5px;"">
-                    ${dateStr}
+                const items = [
+                    { label: '開', value: data.open },
+                    { label: '高', value: data.high },
+                    { label: '低', value: data.low },
+                    { label: '收', value: data.close }
+                ];
+                tooltipEl.innerHTML =
+                    `${items.map(item =>
+                        `<div>
+                            ${item.label} = 
+                            <span style="color: ${color};">
+                                ${formatter.format(item.value)}
+                            </span>
+                        </div>`
+                    ).join('')}
+                    <div style="font-size: 8px; color: gray; text-align: center; margin-top: 5px;">
+                        ${dateStr}
                     </div>`;
             }
 
-            let left = param.point.x + container.getClientRects()[0].x;
-            // if (left > container.clientWidth + container.getClientRects()[0].x - toolTipWidth) {
-            //     left =
-            //         param.point.x + container.getClientRects()[0].x - toolTipMargin - toolTipWidth;
-            // }
+            const containerRect = container.getBoundingClientRect();
+            let left = param.point.x + containerRect.left + window.scrollX;
+            let top = param.point.y + containerRect.top + window.scrollY;
 
-            let top = param.point.y + container.getClientRects()[0].y;
-            // if (top > container.clientHeight - toolTipHeight) {
-            //     top = param.point.y - toolTipHeight - toolTipMargin;
-            // }
             tooltipEl.style.left = left + 'px';
             tooltipEl.style.top = top + 'px';
         }
