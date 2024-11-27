@@ -1,13 +1,20 @@
 from datetime import datetime
+from fastapi import HTTPException
 import pandas as pd
 import os
-from stocksense.api.data.endpoint import Endpoint
+from .endpoint import Endpoint
 import yfinance as yf
+
+import os
 
 
 class YFinanceEndpoint(Endpoint):
     def __init__(self):
         super().__init__("yfinance")
+        with open("stocksense/api/data/yf_tickers.txt", "r") as f:
+            self.symbols = f.read().splitlines()
+            self.symbols = [symbol for symbol in self.symbols if "." not in symbol]  # remove indices
+            self.symbols = self.symbols[:100]  # limit to 100 symbols to avoid page freezing
 
     async def get_kline(self, symbol: str, begin: datetime, end: datetime, timeframe: str) -> pd.DataFrame:
         data_path = os.path.join(
@@ -27,6 +34,9 @@ class YFinanceEndpoint(Endpoint):
         return {symbol: pd.read_pickle(path) for (symbol, path) in data_paths.items()}
 
     def _download(self, symbol: list[str], begin: datetime, end: datetime, timeframe: str) -> None:
+        if timeframe.endswith("m") or timeframe.endswith("h"):
+            raise HTTPException(
+                status_code=400, detail="Timeframe smaller than 1d is not supported for Yahoo Finance")
         try:
             result: pd.DataFrame = yf.download(
                 symbol,

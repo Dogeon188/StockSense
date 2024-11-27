@@ -8,7 +8,7 @@ from fastapi import HTTPException
 import asyncio
 from typing import Callable
 
-from stocksense.util.ccxtdl import download as dl
+from ...util.ccxtdl import download as dl
 from .endpoint import Endpoint
 
 import warnings

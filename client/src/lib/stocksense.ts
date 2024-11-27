@@ -14,14 +14,16 @@ export default class StockSense {
     }
 
     // TODO: move to use timestamp instead of ISO string
-    static getKLinesUrl(endpoint: string, symbol: string, begin: string, end: string): string {
+    static getKLinesUrl(endpoint: string, symbol: string, begin: string, end: string, timeframe: string = "1h"): string {
+        if (endpoint === "yfinance") timeframe = "1d";
         const apiUrl = UserConfig.get('apiUrl');
         const beginDate = new Date(begin);
         const endDate = new Date(end);
         const query = new URLSearchParams({
             symbol: symbol,
             begin: beginDate.toISOString(),
-            end: endDate.toISOString()
+            end: endDate.toISOString(),
+            timeframe: timeframe
         });
         return `${apiUrl}/data/endpoints/${endpoint}/kline?${query}`;
     }
