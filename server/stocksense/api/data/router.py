@@ -5,6 +5,7 @@ import pandas as pd
 from .endpoint import Endpoint
 # from .baostock import BaostockEndpoint
 from .ccxt import CCXTEndpoint
+from .yfinance import YFinanceEndpoint
 
 
 router = APIRouter(
@@ -15,9 +16,10 @@ router = APIRouter(
 
 endpoints: dict[str, Endpoint] = {
     # "baostock": BaostockEndpoint(),
-    "binance": CCXTEndpoint("binance"),
-    "huobi": CCXTEndpoint("huobi"),
-    "bitfinex2": CCXTEndpoint("bitfinex2"),
+    # "binance": CCXTEndpoint("binance"),
+    # "huobi": CCXTEndpoint("huobi"),
+    # "bitfinex2": CCXTEndpoint("bitfinex2"),
+    "yfinance": YFinanceEndpoint(),
 }
 
 

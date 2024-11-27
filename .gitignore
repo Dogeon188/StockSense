@@ -163,3 +163,14 @@ cython_debug/
 
 # Gymnasium logs
 logs/
+
+*.pth
+
+# LaTeX
+*.aux
+*.fdb_latexmk
+*.fls
+*.synctex.gz
+*.synctex(busy)
+*.pdf
+*.cls
