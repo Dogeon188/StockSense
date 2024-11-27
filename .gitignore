@@ -166,7 +166,6 @@ logs/
 
 *.pth
 
-
 # LaTeX
 *.aux
 *.fdb_latexmk

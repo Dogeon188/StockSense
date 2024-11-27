@@ -1,10 +1,12 @@
 from fastapi import APIRouter, HTTPException
 from datetime import datetime
 import pandas as pd
+from ccxt.base.errors import NetworkError
 
 from .endpoint import Endpoint
 # from .baostock import BaostockEndpoint
 from .ccxt import CCXTEndpoint
+from .yfinance import YFinanceEndpoint
 
 
 router = APIRouter(
@@ -15,11 +17,15 @@ router = APIRouter(
 
 endpoints: dict[str, Endpoint] = {
     # "baostock": BaostockEndpoint(),
-    "binance": CCXTEndpoint("binance"),
-    "huobi": CCXTEndpoint("huobi"),
-    "bitfinex2": CCXTEndpoint("bitfinex2"),
+    "yfinance": YFinanceEndpoint(),
 }
 
+try:
+    endpoints["binance"] = CCXTEndpoint("binance")
+    endpoints["huobi"] = CCXTEndpoint("huobi")
+    endpoints["bitfinex2"] = CCXTEndpoint("bitfinex2")
+except NetworkError:
+    pass
 
 @router.get("/endpoints")
 async def get_endpoints() -> list[str]:
