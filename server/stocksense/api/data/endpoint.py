@@ -41,7 +41,7 @@ class Endpoint(metaclass=SingletonABCMeta):
             End of the time range
         timeframe : str
             Timeframe for K-line data.
-            Defaults to 1d if no parameter provided. Supported timeframe values:  
+            Defaults to 1d if no parameter provided. Supported values:  
                 1m, 2m, ..., 59m - for minutes  
                 1h, 2h, ..., 23h - for hours  
                 1d, ..., 7d - for days.
@@ -73,7 +73,7 @@ class Endpoint(metaclass=SingletonABCMeta):
             End of the time range
         timeframe : str
             Timeframe for K-line data.
-            Defaults to 1d if no parameter provided. Supported timeframe values:  
+            Defaults to 1d if no parameter provided. Supported values:  
                 1m, 2m, ..., 59m - for minutes  
                 1h, 2h, ..., 23h - for hours  
                 1d, ..., 7d - for days.
