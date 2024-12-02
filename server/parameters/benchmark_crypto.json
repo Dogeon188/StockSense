@@ -4,7 +4,7 @@
         "symbols": ["BTC/USDT", "ETH/USDT", "BNB/USDT", "NEO/USDT", "LTC/USDT", "SOL/USDT", "AVAX/USDT", "DOGE/USDT"],
         "since": "2020-01-01",
         "until": "2024-11-30",
-        "interval": "1m",
+        "timeframe": "1m",
         "train_ratio": 0.7,
         "val_ratio": 0.1,
         "test_ratio": 0.2

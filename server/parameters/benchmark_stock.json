@@ -1,10 +1,10 @@
 {
     "data": {
         "endpoint": "yfinance",
-        "symbols": ["MSFT", "AAPL", "T", "GOOG", "AMD", "ASML", "BABA", "AXP"],
-        "since": "2017-01-01",
+        "symbols": ["MSFT", "AAPL", "T", "GOOG", "AMD", "ASML", "TXN", "AXP"],
+        "since": "2000-01-01",
         "until": "2024-11-30",
-        "interval": "1d",
+        "timeframe": "1d",
         "train_ratio": 0.7,
         "val_ratio": 0.1,
         "test_ratio": 0.2

@@ -23,7 +23,7 @@ class DataParameters:
     symbols: list[str]
     since: datetime
     until: datetime
-    interval: str = "1d"
+    timeframe: str = "1d"
     train_ratio: float = 0.7
     val_ratio: float = 0.1
     test_ratio: float = 0.2
