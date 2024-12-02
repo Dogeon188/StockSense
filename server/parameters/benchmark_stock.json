@@ -1,0 +1,31 @@
+{
+    "data": {
+        "endpoint": "yfinance",
+        "symbols": ["MSFT", "AAPL", "T", "GOOG", "AMD", "ASML", "BABA", "AXP"],
+        "since": "2017-01-01",
+        "until": "2024-11-30",
+        "interval": "1d",
+        "train_ratio": 0.7,
+        "val_ratio": 0.1,
+        "test_ratio": 0.2
+    },
+    "model": {
+        "model": "DQN"
+    },
+    "training": {
+        "episodes": 100,
+        "batch_size": 64,
+        "learning_rate": 0.0001,
+        "memory": 100,
+        "gamma": 0.99,
+        "epsilon_start": 0.9,
+        "epsilon_end": 0.05,
+        "epsilon_decay": 1000,
+        "target_update": 0.005,
+        "grad_clip": 100
+    },
+    "environment": {
+        "initial_amount": 1000,
+        "trading_fee": 0.0001
+    }
+}
