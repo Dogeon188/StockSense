@@ -13,7 +13,8 @@ def parse_date(date: float | str | datetime) -> datetime:
         elif re.match(r"\d{4}-\d{1,2}-\d{1,2}", date):
             return datetime.strptime(date, "%Y-%m-%d")
         else:
-            raise ValueError("Invalid date format. Please use 'YYYY-MM-DD' or 'YYYY-MM-DD HH:MM:SS'.")
+            raise ValueError(
+                "Invalid date format. Please use 'YYYY-MM-DD' or 'YYYY-MM-DD HH:MM:SS'.")
     return date
 
 
@@ -37,52 +38,70 @@ class DataParameters:
 
 
 @dataclass
-class ModelParameters:
-    model: str
-
-
-@dataclass
-class TrainingParameters:
-    episodes: int = 100
-    batch_size: int = 64
-    learning_rate: float = 0.0001
-    memory: int = 100
-    gamma: float = 0.99
-    epsilon_start: float = 0.9
-    epsilon_end: float = 0.05
-    epsilon_decay: int = 1000
-    target_update: float = 0.005
-    grad_clip: int = 100
-
-
-@dataclass
 class EnvironmentParameters:
     initial_amount: float = 1000
     trading_fee: float = 0.0001
+    verbose: int = 0
 
 
 @dataclass
-class Parameters:
+class BenchParameters:
     data: DataParameters
-    model: ModelParameters
-    training: TrainingParameters
     environment: EnvironmentParameters
 
     @staticmethod
     def from_object(
         data: dict,
-        model: dict,
-        training: dict,
         environment: dict
     ):
-        return Parameters(
+        return BenchParameters(
             data=DataParameters(**data),
-            model=ModelParameters(**model),
-            training=TrainingParameters(**training),
             environment=EnvironmentParameters(**environment)
         )
 
     @staticmethod
     def from_json(json_file: str):
         with open(json_file, "r") as file:
-            return Parameters.from_object(**json.load(file))
+            return BenchParameters.from_object(**json.load(file))
+
+
+@dataclass
+class ModelParameters:
+    model: str
+    training: bool = False
+    episodes: int = 100
+    batch_size: int = 64
+    learning_rate: float = 0.0001
+    memory: int = 100
+    grad_clip: int = 100
+    gamma: float = 0.99
+    epsilon_start: float = 0.9
+    epsilon_end: float = 0.05
+    epsilon_decay: int = 1000
+
+    params: dict = None
+
+    @staticmethod
+    def from_object(
+        model: str,
+        training: bool = False,
+        episodes: int = 100,
+        learning_rate: float = 0.0001,
+        grad_clip: int = 100,
+        gamma: float = 0.99,
+        **params
+    ):
+        return ModelParameters(
+            model=model,
+            training=training,
+            episodes=episodes,
+            learning_rate=learning_rate,
+            grad_clip=grad_clip,
+            gamma=gamma,
+            params=params
+        )
+
+    @staticmethod
+    def from_json(json_file: str):
+        with open(json_file, "r") as file:
+            return ModelParameters.from_object(**json.load(file))

@@ -208,8 +208,16 @@ class MultiStockTradingEnv(_gym.Env):
         return self._get_obs(), reward, done, truncated, info
 
     def log(self):
+        # FIXME only consider last asset
         print("Portfolio Return : " + f"{100*(self.historical_info.get_total_assets(
             -1) / self.historical_info.get_total_assets(0) - 1):5.2f}%")
+    
+    def get_results(self):
+        # TODO return necessary results
+        return {
+            "portfolio_value": 0,
+            "portfolio_return": 0,
+        }
 
     def render():
         pass

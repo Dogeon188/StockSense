@@ -9,23 +9,10 @@
         "val_ratio": 0.1,
         "test_ratio": 0.2
     },
-    "model": {
-        "model": "DQN"
-    },
-    "training": {
-        "episodes": 100,
-        "batch_size": 64,
-        "learning_rate": 0.0001,
-        "memory": 100,
-        "gamma": 0.99,
-        "epsilon_start": 0.9,
-        "epsilon_end": 0.05,
-        "epsilon_decay": 1000,
-        "target_update": 0.005,
-        "grad_clip": 100
-    },
     "environment": {
         "initial_amount": 1000,
-        "trading_fee": 0.0001
+        "trading_fee": 0.0001,
+        "window_size": 100,
+        "verbose": 1
     }
 }
