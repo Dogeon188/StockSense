@@ -7,10 +7,15 @@ import stockcore.data as _scdata
 class History:
     def __init__(self):
         self.total_assets_list = []
-    def add(self, total_assets):
+        self.rewards_list = []
+    def add_total_assets(self, total_assets):
         self.total_assets_list.append(total_assets)
+    def add_reward(self, reward):
+        self.rewards_list.append(reward)
     def get_total_assets(self, idx):
         return self.total_assets_list[idx]
+    def get_history_reward(self):
+        return self.rewards_list
     def get_history(self):
         return self.total_assets_list
 
@@ -138,7 +143,7 @@ class MultiStockTradingEnv(_gym.Env):
         )
 
         self.historical_info = History()
-        self.historical_info.add(self.portfolio_initial_value)
+        self.historical_info.add_total_assets(self.portfolio_initial_value)
 
         return self._get_obs(), {}
 
@@ -180,11 +185,11 @@ class MultiStockTradingEnv(_gym.Env):
         if isinstance(self.max_episode_duration,int) and self._step >= self.max_episode_duration - 1:
             truncated = True
 
-        self.historical_info.add(portfolio_value)
-
+        self.historical_info.add_total_assets(portfolio_value)
         if not done:
             reward = self.reward_function()
             info = {}
+        self.historical_info.add_reward(reward)
 
         if done or truncated:
             self.log()
@@ -199,3 +204,6 @@ class MultiStockTradingEnv(_gym.Env):
 
     def get_history(self):
         return self.historical_info.get_history()
+    
+    def get_history_reward(self):
+        return self.historical_info.get_history_reward()
