@@ -54,6 +54,7 @@ class MultiStockTradingEnv(_gym.Env):
                 trading_fees = 0,
                 portfolio_initial_value = 1000,
                 max_episode_duration = 'max',
+                strategy = 'maximum_reward',
                 verbose = 1,
                 name = "Stock",
                 render_mode= "logs"
@@ -66,6 +67,7 @@ class MultiStockTradingEnv(_gym.Env):
         self.windows = windows
         self.trading_fees = trading_fees
         self.portfolio_initial_value = float(portfolio_initial_value)
+        self.strategy = strategy
         
         self._set_dfs(dfs)
         
@@ -157,11 +159,12 @@ class MultiStockTradingEnv(_gym.Env):
         return
 
     def _take_action(self, actions: int):
-        """For now, I just assume that the actions are the percentages of the stocks and cash.
-        """
-        actions_one_hot: list[int] = [0] * self.action_space.n
-        actions_one_hot[actions] = 1
-        percentages_of_stocks_and_cash = list(actions_one_hot)
+        if (self.strategy == 'maximum_reward'):
+            actions_one_hot: list[int] = [0] * self.action_space.n
+            actions_one_hot[actions] = 1
+            percentages_of_stocks_and_cash = list(actions_one_hot)
+        elif (self.strategy == 'buy_and_hold'):
+            percentages_of_stocks_and_cash = actions
         if percentages_of_stocks_and_cash != self._percentages_of_stocks_and_cash:
             self._trade(percentages_of_stocks_and_cash)
 
