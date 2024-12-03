@@ -1,14 +1,15 @@
 <script>
+    import Charts from '$components/Charts.svelte';
+    import SymbolSelector from '$components/SymbolSelector.svelte';
+
+    let dataUrl = $state('https://raw.githubusercontent.com/ClementPerroud/Gym-Trading-Env/main/examples/data/BTC_USD-Hourly.csv');
 </script>
 
-<main>
-    <h1>Hello world!</h1>
-    <p>
-        Visit <a href="https://svelte.dev/docs/kit">svelte.dev/docs/kit</a> to read the documentation
-    </p>
+<main >
+    <SymbolSelector bind:dataUrl/>    
+    <Charts bind:dataUrl/>
 </main>
 
 <style lang="sass">
-a
-    text-decoration: none
+
 </style>
