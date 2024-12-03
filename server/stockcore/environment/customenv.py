@@ -14,6 +14,8 @@ class History:
 
     def get_total_assets(self, idx):
         return self.total_assets_list[idx]
+    def get_history(self):
+        return self.total_assets_list
 
 
 class Portfolio:
@@ -115,10 +117,10 @@ class MultiStockTradingEnv(_gym.Env):
 
     def get_dfs_length(self):
         return self.length_of_merged_df
-
-    def _get_price(self, delta=0):
+    
+    def _get_price(self, delta = 0):
         return [price.iloc[self._idx + delta] for price in self._price_array]
-
+    
     def _get_obs(self):
 
         if self.windows is None:
@@ -153,7 +155,7 @@ class MultiStockTradingEnv(_gym.Env):
         self.historical_info = History()
         self.historical_info.add(self.portfolio_initial_value)
 
-        return self._get_obs()
+        return self._get_obs(), {}
 
     def _trade(self, percentages_of_stocks_and_cash, prices_of_stocks=None):
         self._portfolio.trade_to_new_percentages(
@@ -198,7 +200,7 @@ class MultiStockTradingEnv(_gym.Env):
 
         if not done:
             reward = self.reward_function()
-            info = None
+            info = {}
 
         if done or truncated:
             if self.verbose > 0:
