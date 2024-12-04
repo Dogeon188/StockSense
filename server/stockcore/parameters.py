@@ -41,6 +41,7 @@ class DataParameters:
 class EnvironmentParameters:
     initial_amount: float = 1000
     trading_fee: float = 0.0001
+    windows: int = 10
     verbose: int = 0
 
 

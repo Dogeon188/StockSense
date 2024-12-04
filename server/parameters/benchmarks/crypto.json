@@ -12,6 +12,7 @@
     "environment": {
         "initial_amount": 1000,
         "trading_fee": 0.0001,
+        "windows": 5,
         "verbose": 1
     }
 }

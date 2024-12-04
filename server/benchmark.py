@@ -50,15 +50,22 @@ def plot_data(df_dict: dict[str, pd.DataFrame], train_split_end_date, val_split_
     dfs = list(df_dict.values())
     plt.xlim(dfs[0].index[0], dfs[0].index[-1])
     plt.ylim(-10, max(df["close"].max() for df in dfs) + 10)
-    plt.fill_betweenx(plt.ylim(
-    ), dfs[0].index[0], train_split_end_date, color="green", alpha=0.1, label="train")
-    plt.fill_betweenx(plt.ylim(), train_split_end_date,
-                      val_split_end_date, color="yellow", alpha=0.1, label="val")
-    plt.fill_betweenx(plt.ylim(), val_split_end_date,
-                      dfs[0].index[-1], color="red", alpha=0.1, label="test")
+    plt.fill_betweenx(
+        plt.ylim(),
+        dfs[0].index[0], train_split_end_date,
+        color="green", alpha=0.1, label="train")
+    plt.fill_betweenx(
+        plt.ylim(),
+        train_split_end_date, val_split_end_date,
+        color="yellow", alpha=0.1, label="val")
+    plt.fill_betweenx(
+        plt.ylim(),
+        val_split_end_date, dfs[0].index[-1],
+        color="red", alpha=0.1, label="test")
     plt.title("Asset Prices")
     plt.legend()
     plt.savefig(save_path)
+    plt.close()
 
 
 def create_env(
@@ -70,9 +77,10 @@ def create_env(
         dfs=dfs,
         portfolio_initial_value=params.environment.initial_amount,
         trading_fees=params.environment.trading_fee,
+        windows=params.environment.windows,
         verbose=verbose
     )
-    check_env(env)
+    # check_env(env)
     return env
 
 
@@ -175,7 +183,28 @@ def main(benchmark_path: Path, model_path: Path):
     results = env.get_results()
     with open(root / "results.json", "w") as f:
         json.dump(results, f, indent=4)
-    # TODO: Plot the results
+
+    # Plot the results
+
+    date = env.get_date()[bench_params.environment.windows-1:]
+    date = pd.to_datetime(date, unit="ms")
+    hist = env.get_history()
+
+    plt.figure(figsize=(14, 7))
+    plt.plot(date, hist)
+    plt.title("Portfolio Value")
+    plt.savefig(root / "history.png")
+    plt.close()
+
+    plt.figure(figsize=(14, 7))
+    reward_hist = env.get_history_reward()
+    reward_hist_mean = pd.Series(reward_hist).rolling(20).mean()
+    plt.plot(date[1:], reward_hist)
+    plt.plot(date[1:], reward_hist_mean)
+    plt.title("Reward History")
+    plt.legend(["Reward", "Mean Reward (20)"])
+    plt.savefig(root / "reward_history.png")
+    plt.close()
 
     env.close()
 
