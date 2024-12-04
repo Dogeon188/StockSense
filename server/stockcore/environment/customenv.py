@@ -99,7 +99,8 @@ class MultiStockTradingEnv(_gym.Env):
         self._nb_features = len(self._features_columns)
 
         self._obs_array = _np.array(merged_df[self._features_columns], dtype= _np.float32)
-        self._price_array = [df["close"] for df in self.dfs]
+        self._price_array = [merged_df[f"close_{idx}"] for idx in range(self._number_of_stocks)]
+        self._date_array = merged_df["unix_0"]
 
     def _dfs_preprocess(self, dfs):
         dfs = [df.copy() for df in dfs]
@@ -210,3 +211,6 @@ class MultiStockTradingEnv(_gym.Env):
     
     def get_history_reward(self):
         return self.historical_info.get_history_reward()
+
+    def get_date(self):
+        return self._date_array
