@@ -1,15 +1,8 @@
 {
     "model": "A2C",
-    "training": true,
+    "force_retrain": true,
     "episodes": 20,
-    "batch_size": 64,
-    "learning_rate": 0.0001,
-    "memory": 100,
+    "learning_rate": 1e-4,
     "gamma": 0.99,
-    "epsilon_start": 0.9,
-    "epsilon_end": 0.05,
-    "epsilon_decay": 1000,
-    "target_update": 0.005,
-    "grad_clip": 100,
-    "timestep_scale": 15
+    "grad_clip": 100
 }

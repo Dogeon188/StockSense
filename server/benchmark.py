@@ -135,7 +135,7 @@ def main(benchmark_path: Path, model_path: Path):
 
     # Train or load the model
 
-    if model_params.training or not (root / "model.zip").exists():
+    if model_params.force_retrain or not (root / "model.zip").exists():
         print("Training model...")
         model.learn(
             total_timesteps=env.get_dfs_length() * model_params.episodes,
@@ -196,18 +196,23 @@ if __name__ == '__main__':
                   if not args.model.endswith(".json")
                   else Path(args.model))
 
-    print(f"Using benchmark configuration file: {benchmark_path}")
-    print(f"Using model configuration file: {model_path}")
-
     try:
         if not benchmark_path.exists():
-            raise FileNotFoundError(
-                f"Benchmark configuration file {benchmark_path} not found\nAvailable files: {list(Path('parameters/benchmarks').rglob('*.json'))}")
+            available = list(Path('parameters/benchmarks').rglob('*.json'))
+            available = [str(path) for path in available]
+            print(
+                f"Benchmark configuration file {benchmark_path} not found\nAvailable files: {available}")
+            exit(1)
         if not model_path.exists():
-            raise FileNotFoundError(
-                f"Model configuration file {model_path} not found\nAvailable files: {list(Path('parameters/models').rglob('*.json'))}")
+            available = list(Path('parameters/models').rglob('*.json'))
+            available = [path.stem for path in available]
+            print(
+                f"Model configuration file {model_path} not found\nAvailable files: {available}")
+            exit(1)
+
+        print(f"Using benchmark configuration file: {benchmark_path}")
+        print(f"Using model configuration file: {model_path}")
+
         main(benchmark_path, model_path)
     except ResourceWarning as e:
         pass
-    except Exception as e:
-        print(e)

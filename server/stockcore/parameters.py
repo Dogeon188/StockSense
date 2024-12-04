@@ -68,37 +68,35 @@ class BenchParameters:
 @dataclass
 class ModelParameters:
     model: str
-    training: bool = False
+    force_retrain: bool = False
     episodes: int = 100
-    batch_size: int = 64
     learning_rate: float = 0.0001
     memory: int = 100
     grad_clip: int = 100
     gamma: float = 0.99
-    epsilon_start: float = 0.9
-    epsilon_end: float = 0.05
-    epsilon_decay: int = 1000
+
+    policy_kwargs: dict = None
 
     params: dict = None
 
     @staticmethod
     def from_object(
         model: str,
-        training: bool = False,
+        force_retrain: bool = False,
         episodes: int = 100,
         learning_rate: float = 0.0001,
         grad_clip: int = 100,
-        gamma: float = 0.99,
-        **params
+        policy_kwargs: dict = None,
+        **kwargs
     ):
         return ModelParameters(
             model=model,
-            training=training,
+            force_retrain=force_retrain,
             episodes=episodes,
             learning_rate=learning_rate,
             grad_clip=grad_clip,
-            gamma=gamma,
-            params=params
+            policy_kwargs=policy_kwargs,
+            params=kwargs
         )
 
     @staticmethod
