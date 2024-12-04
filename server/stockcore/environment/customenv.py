@@ -166,6 +166,8 @@ class MultiStockTradingEnv(_gym.Env):
             percentages_of_stocks_and_cash = list(actions_one_hot)
         elif (self.strategy == 'buy_and_hold'):
             percentages_of_stocks_and_cash = actions
+        elif (self.strategy == 'percentage'):
+            percentages_of_stocks_and_cash = [i/sum(actions) for i in actions]
         if percentages_of_stocks_and_cash != self._percentages_of_stocks_and_cash:
             self._trade(percentages_of_stocks_and_cash)
 
