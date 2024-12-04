@@ -8,12 +8,15 @@ import stockcore.data as _scdata
 class History:
     def __init__(self):
         self.total_assets_list = []
-
-    def add(self, total_assets):
+        self.rewards_list = []
+    def add_total_assets(self, total_assets):
         self.total_assets_list.append(total_assets)
-
+    def add_reward(self, reward):
+        self.rewards_list.append(reward)
     def get_total_assets(self, idx):
         return self.total_assets_list[idx]
+    def get_history_reward(self):
+        return self.rewards_list
     def get_history(self):
         return self.total_assets_list
 
@@ -55,15 +58,16 @@ class MultiStockTradingEnv(_gym.Env):
     metadata = {'render_modes': ['logs']}
 
     def __init__(self,
-                 dfs: list[_pd.DataFrame],
-                 windows=None,
-                 trading_fees=0,
-                 portfolio_initial_value=1000,
-                 max_episode_duration='max',
-                 verbose=1,
-                 name="Stock",
-                 render_mode="logs"
-                 ):
+                dfs : list,
+                windows = None,
+                trading_fees = 0,
+                portfolio_initial_value = 1000,
+                max_episode_duration = 'max',
+                strategy = 'maximum_reward',
+                verbose = 1,
+                name = "Stock",
+                render_mode= "logs"
+                ):
         self.max_episode_duration = max_episode_duration
         self.verbose = verbose
         self.name = name
@@ -72,7 +76,8 @@ class MultiStockTradingEnv(_gym.Env):
         self.windows = windows
         self.trading_fees = trading_fees
         self.portfolio_initial_value = float(portfolio_initial_value)
-
+        self.strategy = strategy
+        
         self._set_dfs(dfs)
 
         self.number_of_stocks = len(dfs)
@@ -102,9 +107,9 @@ class MultiStockTradingEnv(_gym.Env):
             col for col in merged_df.columns if "feature" in col]
         self._nb_features = len(self._features_columns)
 
-        self._obs_array = _np.array(
-            merged_df[self._features_columns], dtype=_np.float32)
-        self._price_array = [df["close"] for df in self.dfs]
+        self._obs_array = _np.array(merged_df[self._features_columns], dtype= _np.float32)
+        self._price_array = [merged_df[f"close_{idx}"] for idx in range(self._number_of_stocks)]
+        self._date_array = merged_df["unix_0"]
 
     def _dfs_preprocess(self, dfs: list[_pd.DataFrame]):
         dfs = [df.copy() for df in dfs]
@@ -153,7 +158,7 @@ class MultiStockTradingEnv(_gym.Env):
         )
 
         self.historical_info = History()
-        self.historical_info.add(self.portfolio_initial_value)
+        self.historical_info.add_total_assets(self.portfolio_initial_value)
 
         return self._get_obs(), {}
 
@@ -167,11 +172,12 @@ class MultiStockTradingEnv(_gym.Env):
         return
 
     def _take_action(self, actions: int):
-        """For now, I just assume that the actions are the percentages of the stocks and cash.
-        """
-        actions_one_hot: list[int] = [0] * self.action_space.n
-        actions_one_hot[actions] = 1
-        percentages_of_stocks_and_cash = list(actions_one_hot)
+        if (self.strategy == 'maximum_reward'):
+            actions_one_hot: list[int] = [0] * self.action_space.n
+            actions_one_hot[actions] = 1
+            percentages_of_stocks_and_cash = list(actions_one_hot)
+        elif (self.strategy == 'buy_and_hold'):
+            percentages_of_stocks_and_cash = actions
         if percentages_of_stocks_and_cash != self._percentages_of_stocks_and_cash:
             self._trade(percentages_of_stocks_and_cash)
 
@@ -196,11 +202,11 @@ class MultiStockTradingEnv(_gym.Env):
         if isinstance(self.max_episode_duration, int) and self._step >= self.max_episode_duration - 1:
             truncated = True
 
-        self.historical_info.add(portfolio_value)
-
+        self.historical_info.add_total_assets(portfolio_value)
         if not done:
             reward = self.reward_function()
             info = {}
+        self.historical_info.add_reward(reward)
 
         if done or truncated:
             if self.verbose > 0:
@@ -221,3 +227,12 @@ class MultiStockTradingEnv(_gym.Env):
 
     def render():
         pass
+
+    def get_history(self):
+        return self.historical_info.get_history()
+    
+    def get_history_reward(self):
+        return self.historical_info.get_history_reward()
+
+    def get_date(self):
+        return self._date_array
