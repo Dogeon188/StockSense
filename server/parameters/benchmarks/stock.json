@@ -2,7 +2,7 @@
     "data": {
         "endpoint": "yfinance",
         "symbols": ["MSFT", "AAPL", "T", "GOOG", "AMD", "ASML", "TXN", "AXP"],
-        "since": "2000-01-01",
+        "since": "2005-01-01",
         "until": "2024-11-30",
         "timeframe": "1d",
         "train_ratio": 0.7,

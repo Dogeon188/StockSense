@@ -2,9 +2,9 @@
     "data": {
         "endpoint": "binance",
         "symbols": ["BTC/USDT", "ETH/USDT", "BNB/USDT", "NEO/USDT", "LTC/USDT", "SOL/USDT", "AVAX/USDT", "DOGE/USDT"],
-        "since": "2020-01-01",
+        "since": "2022-01-01",
         "until": "2024-11-30",
-        "timeframe": "1m",
+        "timeframe": "1h",
         "train_ratio": 0.7,
         "val_ratio": 0.1,
         "test_ratio": 0.2
@@ -12,7 +12,6 @@
     "environment": {
         "initial_amount": 1000,
         "trading_fee": 0.0001,
-        "window_size": 100,
         "verbose": 1
     }
 }

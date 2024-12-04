@@ -1,4 +1,5 @@
 import argparse
+from matplotlib import pyplot as plt
 import pandas as pd
 import asyncio
 from tqdm import tqdm
@@ -39,6 +40,27 @@ def load_data(data_params: DataParameters) -> dict[str, pd.DataFrame]:
     return dict(zip(data_params.symbols, results))
 
 
+def plot_data(df_dict: dict[str, pd.DataFrame], train_split_end_date, val_split_end_date, save_path: Path):
+    # plot the data
+    df_dict = {k: v for k, v in df_dict.items(
+    ) if k != "BTC/USDT" and k != "ETH/USDT"}
+    plt.figure(figsize=(14, 7))
+    for symbol, df in df_dict.items():
+        plt.plot(df.index, df["close"], label=symbol)
+    dfs = list(df_dict.values())
+    plt.xlim(dfs[0].index[0], dfs[0].index[-1])
+    plt.ylim(-10, max(df["close"].max() for df in dfs) + 10)
+    plt.fill_betweenx(plt.ylim(
+    ), dfs[0].index[0], train_split_end_date, color="green", alpha=0.1, label="train")
+    plt.fill_betweenx(plt.ylim(), train_split_end_date,
+                      val_split_end_date, color="yellow", alpha=0.1, label="val")
+    plt.fill_betweenx(plt.ylim(), val_split_end_date,
+                      dfs[0].index[-1], color="red", alpha=0.1, label="test")
+    plt.title("Asset Prices")
+    plt.legend()
+    plt.savefig(save_path)
+
+
 def create_env(
     dfs: list[pd.DataFrame],
     params: BenchParameters,
@@ -54,7 +76,7 @@ def create_env(
     return env
 
 
-def main(benchmark_path: str, model_path: str):
+def main(benchmark_path: Path, model_path: Path):
     # Create the output folder
 
     root = build_folders(Path(benchmark_path).stem +
@@ -70,6 +92,10 @@ def main(benchmark_path: str, model_path: str):
     df_dict = load_data(bench_params.data)
     dfs = list(df_dict.values())
 
+    # make sure all the dataframes have the same length
+    assert all(df.index.equals(dfs[0].index)
+               for df in dfs), "Dataframes have different datetime indices"
+
     # Split the data
 
     train_split_end = int(bench_params.data.train_ratio * len(dfs[0]))
@@ -84,6 +110,12 @@ def main(benchmark_path: str, model_path: str):
                  for symbol, df in df_dict.items()}
     test_split = {symbol: df[val_split_end_date:]
                   for symbol, df in df_dict.items()}
+
+    # Plot the data
+
+    print("Plotting data...")
+    plot_data(df_dict, train_split_end_date,
+              val_split_end_date, root / "prices.png")
 
     # Create the environment
 
@@ -103,7 +135,7 @@ def main(benchmark_path: str, model_path: str):
 
     # Train or load the model
 
-    if model_params.training:
+    if model_params.training or not (root / "model.zip").exists():
         print("Training model...")
         model.learn(
             total_timesteps=env.get_dfs_length() * model_params.episodes,
@@ -156,9 +188,26 @@ if __name__ == '__main__':
     parser.add_argument('model', type=str,
                         help='Path to the model configuration file')
     args = parser.parse_args()
+
+    benchmark_path = (Path("parameters/benchmarks", args.benchmark + ".json")
+                      if not args.benchmark.endswith(".json")
+                      else Path(args.benchmark))
+    model_path = (Path("parameters/models", args.model + ".json")
+                  if not args.model.endswith(".json")
+                  else Path(args.model))
+
+    print(f"Using benchmark configuration file: {benchmark_path}")
+    print(f"Using model configuration file: {model_path}")
+
     try:
-        main(args.benchmark, args.model)
+        if not benchmark_path.exists():
+            raise FileNotFoundError(
+                f"Benchmark configuration file {benchmark_path} not found\nAvailable files: {list(Path('parameters/benchmarks').rglob('*.json'))}")
+        if not model_path.exists():
+            raise FileNotFoundError(
+                f"Model configuration file {model_path} not found\nAvailable files: {list(Path('parameters/models').rglob('*.json'))}")
+        main(benchmark_path, model_path)
     except ResourceWarning as e:
         pass
     except Exception as e:
-        pass
+        print(e)
