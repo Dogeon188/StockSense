@@ -21,8 +21,8 @@ export default class StockSense {
         const endDate = new Date(end);
         const query = new URLSearchParams({
             symbol: symbol,
-            begin: beginDate.toISOString(),
-            end: endDate.toISOString(),
+            since: beginDate.getTime().toString(),
+            until: endDate.getTime().toString(),
             timeframe: timeframe
         });
         return `${apiUrl}/data/endpoints/${endpoint}/kline?${query}`;

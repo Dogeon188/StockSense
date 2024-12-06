@@ -5,8 +5,8 @@ import pandas as pd
 from ccxt.base.errors import NetworkError
 
 from .endpoint import Endpoint
-# from .baostock import BaostockEndpoint
 from .ccxt import CCXTEndpoint
+# from .baostock import BaostockEndpoint
 from .yfinance import YFinanceEndpoint
 
 
@@ -56,7 +56,7 @@ async def get_kline_df(
     symbol: str,
     since: datetime,
     until: datetime,
-    timeframe: str = "1h",
+    timeframe: str = "1d",
 ) -> pd.DataFrame:
     """Get K-line data for a symbol
 
@@ -66,14 +66,14 @@ async def get_kline_df(
         Name of the endpoint
     symbol : str
         Symbol for the K-line data
-    since : str
+    since : datetime
         Start date for the K-line data
-    until : str
+    until : datetime
         End date for the K-line data
     timeframe : str
         Timeframe for K-line data.
-        Defaults to 1d if no parameter provided. Supported windowSize values:  
-            1m,2m....59m for minutes  
+        Defaults to 1d if no parameter provided. Supported values:  
+            1m, 2m....59m for minutes  
             1h, 2h....23h - for hours  
             1d...7d - for days.
 
@@ -82,7 +82,7 @@ async def get_kline_df(
     pd.DataFrame
         K-line data for the symbol. Contains columns:
         - date : datetime, beginning of the timeframe
-        - unix : int, unix timestamp of the beginning of the timeframe
+        - unix : int, unix timestamp of the beginning of the timeframe (milliseconds)
         - open : float, opening price
         - high : float, highest price
         - low : float, lowest price
@@ -95,10 +95,43 @@ async def get_kline_df(
 @router.get("/endpoints/{endpoint}/kline", response_class=PlainTextResponse)
 async def get_kline_csv(
     endpoint: str,
-    symbol: str = "BTC/USDT",
-    since: datetime = datetime(2019, 1, 1),
-    until: datetime = datetime(2020, 1, 1),
-    timeframe: str = "1h",
+    symbol: str,
+    since: int,
+    until: int,
+    timeframe: str = "1d",
 ) -> str:
-    df = await get_kline_df(endpoint, symbol, since, until, timeframe)
+    """Get K-line data for a symbol in CSV format
+
+    Parameters
+    ----------
+    endpoint : str
+        Name of the endpoint
+    symbol : str
+        Symbol for the K-line data
+    since : int
+        Start date for the K-line data in unix timestamp (milliseconds)
+    until : int
+        End date for the K-line data in unix timestamp (milliseconds)
+    timeframe : str, optional
+        Timeframe for K-line data.
+        Defaults to 1d if no parameter provided. Supported values:  
+            1m, 2m....59m for minutes  
+            1h, 2h....23h - for hours  
+            1d...7d - for days.
+
+    Returns
+    -------
+    str
+        K-line data for the symbol in CSV string format. Contains columns:
+        - date : datetime, beginning of the timeframe
+        - unix : int, unix timestamp of the beginning of the timeframe (milliseconds)
+        - open : float, opening price
+        - high : float, highest price
+        - low : float, lowest price
+        - close : float, closing price
+        - volume : float, volume of the asset traded
+    """
+    _since = datetime.fromtimestamp(since / 1000)
+    _until = datetime.fromtimestamp(until / 1000)
+    df = await get_kline_df(endpoint, symbol, _since, _until, timeframe)
     return df.to_csv()

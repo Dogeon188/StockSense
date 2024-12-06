@@ -6,7 +6,7 @@
     let endpoint = $state('');
     let symbol = $state('');
     let symbolAvailable = $derived(endpoint !== '');
-    let begin = $state('2019-10-31');
+    let begin = $state('2017-01-01');
     let end = $state('2024-11-01');
 </script>
 
