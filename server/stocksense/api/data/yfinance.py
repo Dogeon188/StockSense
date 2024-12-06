@@ -52,7 +52,7 @@ class YFinanceEndpoint(Endpoint):
             for ticker in symbol:
                 _res = result.xs(ticker, level="Ticker", axis=1)
                 _res.rename_axis(None, axis=1, inplace=True)
-                _res.insert(0, "unix", _res.index.astype(int) // 10**6)
+                _res.insert(0, "unix", _res.index.astype('int64') // 10**6)
                 data_path = os.path.join(
                     self._cache_dir, f"yfinance-{ticker}-{begin.date()}-{end.date()}-{timeframe}.pkl")
                 _res.to_pickle(data_path)
