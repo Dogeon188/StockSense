@@ -178,3 +178,4 @@ logs/
 .DS_Store
 
 output/
+cache/

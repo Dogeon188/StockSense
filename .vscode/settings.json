@@ -2,5 +2,6 @@
     "makefile.configureOnOpen": false,
     "files.exclude": {
         "**/__pycache__": true,
-    }
+    },
+    "jupyter.notebookFileRoot": "${workspaceFolder}"
 }
