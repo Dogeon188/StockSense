@@ -8,6 +8,7 @@ import asyncio
 from tqdm import tqdm
 from pathlib import Path
 import json
+import sys
 from stable_baselines3.common.env_checker import check_env
 from stable_baselines3.common.callbacks import BaseCallback
 from stable_baselines3.common.vec_env import VecEnv
@@ -223,7 +224,7 @@ def main(benchmark_path: Path, model_path: Path):
             callback=val_callback
         )
         model.save(root / "model")
-        print(f"Model saved at {root / 'model'}")
+        print(f"Model saved at {root / 'model.zip'}")
     else:
         print("Loading model...")
         model = model.load(root / "model")
@@ -255,15 +256,15 @@ def main(benchmark_path: Path, model_path: Path):
 
     print("Logging results...")
     test_env.log()
-    # results = test_env.get_results()
-    # with open(root / "results.json", "w") as f:
-    #     json.dump(results, f, indent=4)
-
-    # Plot the results
 
     date = test_env.get_date()[bench_params.environment.windows-1:]
     date = pd.to_datetime(date, unit="ms")
-    hist = test_env.get_history()
+    hist = pd.Series(test_env.get_history())
+    reward_hist = pd.Series(test_env.get_history_reward())
+    reward_hist_mean = reward_hist.rolling(20).mean()
+    reward_hist_std = reward_hist.rolling(20).std()
+
+    # Plot the results
 
     plt.figure(figsize=(14, 7))
     plt.plot(date, hist)
@@ -272,10 +273,19 @@ def main(benchmark_path: Path, model_path: Path):
     plt.close()
 
     plt.figure(figsize=(14, 7))
-    reward_hist = test_env.get_history_reward()
-    reward_hist_mean = pd.Series(reward_hist).rolling(20).mean()
-    plt.plot(date[1:], reward_hist)
-    plt.plot(date[1:], reward_hist_mean)
+    plt.plot(
+        date[1:], reward_hist,
+        color="C0", alpha=0.1)
+    plt.plot(
+        date[1:], reward_hist_mean,
+        color="C1")
+    plt.fill_between(
+        date[1:],
+        reward_hist_mean - reward_hist_std,
+        reward_hist_mean + reward_hist_std,
+        color="C1",
+        alpha=0.3
+    )
     plt.title("Reward History")
     plt.legend(["Reward", "Mean Reward (20)"])
     plt.savefig(root / "reward_history.png")
@@ -283,7 +293,17 @@ def main(benchmark_path: Path, model_path: Path):
 
     test_env.close()
 
-    print(f"Results saved at {root}")
+    # Save the results
+
+    results = {
+        "date": date.index,
+        "history": hist,
+        "reward_history": pd.concat([pd.Series([None]), reward_hist], ignore_index=True),
+    }
+    pd.DataFrame(results, index=None).to_csv(root / "results.csv", index=False)
+
+    print(f"History saved at {root / 'results.csv'}")
+
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(
@@ -301,23 +321,31 @@ if __name__ == '__main__':
                   if not args.model.endswith(".json")
                   else Path(args.model))
 
-    try:
-        if not benchmark_path.exists():
-            available = list(Path('parameters/benchmarks').rglob('*.json'))
-            available = [str(path) for path in available]
-            print(
-                f"Benchmark configuration file {benchmark_path} not found\nAvailable files: {available}")
-            exit(1)
-        if not model_path.exists():
-            available = list(Path('parameters/models').rglob('*.json'))
-            available = [path.stem for path in available]
-            print(
-                f"Model configuration file {model_path} not found\nAvailable files: {available}")
-            exit(1)
+    if not benchmark_path.exists():
+        available = list(Path('parameters/benchmarks').rglob('*.json'))
+        available = [str(path) for path in available]
+        print(
+            f"Benchmark configuration file {benchmark_path} not found\nAvailable files: {available}")
+        exit(1)
+    if not model_path.exists():
+        available = list(Path('parameters/models').rglob('*.json'))
+        available = [path.stem for path in available]
+        print(
+            f"Model configuration file {model_path} not found\nAvailable files: {available}")
+        exit(1)
 
-        print(f"Using benchmark configuration file: {benchmark_path}")
-        print(f"Using model configuration file: {model_path}")
+    print(f"Using benchmark configuration file: {benchmark_path}")
+    print(f"Using model configuration file: {model_path}")
 
-        main(benchmark_path, model_path)
-    except ResourceWarning as e:
-        pass
+    def handler(exception_type, exception, traceback):
+        if exception_type == KeyboardInterrupt:
+            print("Interrupted by user")
+            sys.exit(1)
+        elif exception_type == ResourceWarning:
+            pass  # ignore, may be raised by stable-baselines not closing temporary files
+        else:
+            sys.__excepthook__(exception_type, exception, traceback)
+
+    sys.excepthook = handler
+
+    main(benchmark_path, model_path)
