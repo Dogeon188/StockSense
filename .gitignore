@@ -176,3 +176,5 @@ logs/
 *.cls
 
 .DS_Store
+
+output/
