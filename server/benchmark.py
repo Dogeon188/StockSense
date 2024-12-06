@@ -1,11 +1,16 @@
 import argparse
+from typing import Union
+import gymnasium as gym
 from matplotlib import pyplot as plt
+import numpy as np
 import pandas as pd
 import asyncio
 from tqdm import tqdm
-from stable_baselines3.common.env_checker import check_env
 from pathlib import Path
 import json
+from stable_baselines3.common.env_checker import check_env
+from stable_baselines3.common.callbacks import BaseCallback
+from stable_baselines3.common.vec_env import VecEnv
 
 from stockcore.parameters import BenchParameters, DataParameters, ModelParameters
 from stocksense.api import data as scdata
@@ -84,6 +89,61 @@ def create_env(
     return env
 
 
+class ValidationCallback(BaseCallback):
+    """
+    :param eval_env: The environment for validation
+    :param eval_freq: Evaluate the agent every 'eval_freq' call of the callback
+    :param n_eval_episodes: The number of episodes to test the agent
+    :param log_path: Path to a folder where the evaluations ('evaluations.npz') will be saved. It will be updated at each evaluation
+    """
+
+    def __init__(
+        self,
+        val_env: Union[gym.Env, VecEnv],
+        val_freq: int = 1000,
+        n_eval_episodes: int = 5,
+        verbose: int = 1
+    ):
+        super().__init__(verbose)
+        self.eval_env = val_env
+        self.eval_freq = val_freq
+        self.n_eval_episodes = n_eval_episodes
+
+    def _on_step(self) -> bool:
+        """
+        This method will be called by the model after each call to `env.step()`.
+
+        :return: If the callback returns False, training is aborted early.
+        """
+        if self.verbose <= 0:
+            return True
+        if self.num_timesteps % self.eval_freq == 0:
+            return_values, mean_reward = self.evaluate_model()
+            print(f"At Step {self.num_timesteps}, "
+                  f"average portfolio return over {self.n_eval_episodes} episode(s): {np.mean(return_values):5.2f}%")
+        return True
+
+    def evaluate_model(self) -> tuple[list[float], float]:
+        """
+        Evaluate the model performance in validation env
+        """
+        return_values = []
+        for _ in range(self.n_eval_episodes):
+            episode_reward = []
+            done, truncated = False, False
+            obs, info = self.eval_env.reset()
+            while not done and not truncated:
+                action, _states = self.model.predict(obs)
+                obs, rewards, done, truncated, info = self.eval_env.step(
+                    action)
+            history_dqn = self.eval_env.get_history()
+            episode_reward.append(rewards)
+            return_values.append(100 * (history_dqn[-1] / history_dqn[0] - 1))
+
+        mean_reward = np.mean(episode_reward)
+        return return_values, mean_reward
+
+
 def main(benchmark_path: Path, model_path: Path):
     # Create the output folder
 
@@ -128,10 +188,22 @@ def main(benchmark_path: Path, model_path: Path):
     # Create the environment
 
     print("Creating environment...")
-    env = create_env(
+    train_env = create_env(
         list(train_split.values()),
         bench_params,
         verbose=bench_params.environment.verbose
+    )
+
+    val_env = create_env(
+        list(val_split.values()),
+        bench_params,
+        verbose=0
+    )
+    val_callback = ValidationCallback(
+        val_env=val_env,
+        val_freq=bench_params.environment.val_freq,
+        n_eval_episodes=bench_params.environment.n_val_episodes,
+        verbose=1
     )
 
     # Build the model
@@ -139,56 +211,59 @@ def main(benchmark_path: Path, model_path: Path):
     print("Building model...")
     model_params = ModelParameters.from_json(model_path)
 
-    model = build_model(model_params, env)
+    model = build_model(model_params, train_env)
 
     # Train or load the model
 
     if model_params.force_retrain or not (root / "model.zip").exists():
         print("Training model...")
         model.learn(
-            total_timesteps=env.get_dfs_length() * model_params.episodes,
+            total_timesteps=train_env.get_dfs_length() * model_params.episodes,
             log_interval=1,
+            callback=val_callback
         )
         model.save(root / "model")
+        print(f"Model saved at {root / 'model'}")
     else:
         print("Loading model...")
         model = model.load(root / "model")
 
-    env.close()
+    train_env.close()
 
     # Evaluate the model
 
     print("Evaluating model...")
-    env = create_env(
+    test_env = create_env(
         list(test_split.values()),
         bench_params,
         verbose=0
     )
 
-    model.set_env(env)
+    model.set_env(test_env)
 
     done, truncated = False, False
-    observation, _ = env.reset()
-    pbar = tqdm(total=env.get_dfs_length())
+    observation, _ = test_env.reset()
+    pbar = tqdm(total=test_env.get_dfs_length())
     while not done and not truncated:
         position_index = model.predict(observation)[0]
         pbar.update(1)
-        observation, reward, done, truncated, info = env.step(position_index)
+        observation, reward, done, truncated, info = test_env.step(
+            position_index)
     pbar.close()
 
     # Log the results
 
     print("Logging results...")
-    env.log()
-    results = env.get_results()
-    with open(root / "results.json", "w") as f:
-        json.dump(results, f, indent=4)
+    test_env.log()
+    # results = test_env.get_results()
+    # with open(root / "results.json", "w") as f:
+    #     json.dump(results, f, indent=4)
 
     # Plot the results
 
-    date = env.get_date()[bench_params.environment.windows-1:]
+    date = test_env.get_date()[bench_params.environment.windows-1:]
     date = pd.to_datetime(date, unit="ms")
-    hist = env.get_history()
+    hist = test_env.get_history()
 
     plt.figure(figsize=(14, 7))
     plt.plot(date, hist)
@@ -197,7 +272,7 @@ def main(benchmark_path: Path, model_path: Path):
     plt.close()
 
     plt.figure(figsize=(14, 7))
-    reward_hist = env.get_history_reward()
+    reward_hist = test_env.get_history_reward()
     reward_hist_mean = pd.Series(reward_hist).rolling(20).mean()
     plt.plot(date[1:], reward_hist)
     plt.plot(date[1:], reward_hist_mean)
@@ -206,8 +281,9 @@ def main(benchmark_path: Path, model_path: Path):
     plt.savefig(root / "reward_history.png")
     plt.close()
 
-    env.close()
+    test_env.close()
 
+    print(f"Results saved at {root}")
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(

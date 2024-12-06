@@ -43,6 +43,8 @@ class EnvironmentParameters:
     trading_fee: float = 0.0001
     windows: int = 10
     verbose: int = 0
+    val_freq: int = 10000
+    n_val_episodes: int = 1
 
 
 @dataclass
