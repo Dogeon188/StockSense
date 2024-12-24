@@ -7,6 +7,7 @@
 \usepackage{graphicx}
 \usepackage{textcomp}
 \usepackage{xcolor}
+\usepackage{hyperref}
 
 \begin{document}
 
@@ -182,49 +183,92 @@ information for trading decisions.
 Backtesting is a common method to evaluate the performance of a predictive model in the financial domain.
 It simulates the trading strategy on historical data to estimate the strategy's performance.
 
-We use finRL \cite{liu2022finrldeepreinforcementlearning}, a powerful deep reinforcement learning library to backtest our trading strategy.
+We use FinRL \cite{liu2022finrldeepreinforcementlearning}, a powerful deep reinforcement learning library to backtest our trading strategy.
 Our reinforcement learning model is compared with the buy-and-hold strategy, which buys and holds the stock for the entire trading period, on the DJI Index.
 DJI Index is a stock market index that measures the stock performance of 30 large companies listed on stock exchanges in the United States.
 
-Our model is evaluated based on the following metrics:
+Our models are evaluated based on the following metrics:
 \begin{itemize}
   \item Annualized Return: The annualized return of the trading strategy.
   \item Cumulative Return: The cumulative return of the trading strategy.
   \item Maximum Drawdown: The maximum loss from a peak (highest point) to a trough (lowest point) of a trading strategy.
-  \item Sharpe Ratio: As measure of the risk-adjusted return of the trading strategy, the Sharpe ratio is defined as: 
-  \begin{equation}
-    \text{Sharpe Ratio} = \frac{E[R_p - R_f]}{\sigma_p}
-  \end{equation}
-  where $R_p$ is the asset return of the trading strategy, $\sigma_p$ is the standard deviation of the asset excess return, and $R_f$ is the risk-free return (such as a U.S. Treasury security).
-  Therefore, The Sharpe ratio characterizes how well the return of an asset compensates the investor for the risk taken.
-  \item Calmar Ratio: 
-  The Calmar ratio is defined as the ratio of the annualized return to the maximum drawdown of the trading strategy.:
-  \begin{equation}
-    \text{Calmar Ratio} = \frac{\text{Annualized Return}}{\text{Maximum Drawdown}}
-  \end{equation}
-  Compared to the Sharpe ratio, the Calmar ratio focuses on the downside risk of the trading strategy.
+  \item Sharpe Ratio: As measure of the risk-adjusted return of the trading strategy, the Sharpe ratio is defined as:
+    \begin{equation}
+      \text{Sharpe Ratio} = \frac{E[R_p - R_f]}{\sigma_p}
+    \end{equation}
+    where $R_p$ is the asset return of the trading strategy, $\sigma_p$ is the standard deviation of the asset excess return, and $R_f$ is the risk-free return (such as a U.S. Treasury security).
+    Therefore, The Sharpe ratio characterizes how well the return of an asset compensates the investor for the risk taken.
+  \item Calmar Ratio:
+    The Calmar ratio is defined as the ratio of the annualized return to the maximum drawdown of the trading strategy:
+    \begin{equation}
+      \text{Calmar Ratio} = \frac{\text{Annualized Return}}{\text{Maximum Drawdown}}
+    \end{equation}
+    Compared to the Sharpe ratio, the Calmar ratio focuses on the downside risk of the trading strategy.
 
   \item Annualized Volatility: The annualized volatility of the trading strategy.
   \item Sortino Ratio: Sortino ratio is a variation of the Sharpe ratio that only considers the downside risk of the trading strategy. It is defined as:
-  \begin{equation}
-    \text{Sortino Ratio} = \frac{E[R_p - R_f]}{\sigma_d}
-  \end{equation}
-  where $\sigma_d$ is the standard deviation of the asset downside return.
+    \begin{equation}
+      \text{Sortino Ratio} = \frac{E[R_p - R_f]}{\sigma_d}
+    \end{equation}
+    where $\sigma_d$ is the standard deviation of the asset downside return.
 \end{itemize}
 
 \subsection{Results}
 
 % 張 簡
-% Show the results of the experiments and discuss them
+% Discuss the results of the experiments
+
+\begin{table}[htbp]
+  \centering
+  \caption{Performance comparison of the strategies on our dataset.}
+  \begin{tabular}{|c|c|c|c|c|}
+    \hline
+    \textbf{Evaluation} & \multicolumn{4}{|c|}{\textbf{Model}} \\
+    \cline{2-5}
+    \textbf{Metric} & \textit{\textbf{DQN}} & \textit{\textbf{A2C}} & \textit{\textbf{PPO}} & \textit{\textbf{Buy-and-Hold}} \\
+    \hline
+    Annualized Return & \underline{0.3122} & 0.2119 & 0.0192 & 0.2387 \\
+    \hline
+    Cumulative Return & \underline{0.3969} & 0.2667 & 0.0237 & 0.3001 \\
+    \hline
+    Maximum Drawdown & -0.1807 & -0.1549 & -0.2074 & \underline{-0.0678} \\
+    \hline
+    Sharpe Ratio & 1.4614 & 1.0595 & 0.1955 & \underline{2.1126} \\
+    \hline
+    Calmar Ratio & 1.7389 & 1.3682 & 0.0925 & \underline{3.5230} \\
+    \hline
+    Annualized Volatility & 0.1999 & 0.2012 & 0.1941 & \underline{0.1043} \\
+    \hline
+    Sortino Ratio & 1.5270 & 1.4550 & 0.2661 & \underline{3.2108} \\
+    \hline
+  \end{tabular}
+  % footnote
+  \begin{tabular}{p{0.45\textwidth}}
+    \textit{Note:} The best performance for each metric is underlined.
+  \end{tabular}
+  \label{tab:results}
+\end{table}
+
+\begin{figure}[htbp]
+  \centerline{\includegraphics[width=0.4\textwidth]{figs/results.png}}
+  \caption{Performance comparison of the strategies on our dataset.}
+  \label{fig:returns}
+\end{figure}
 
 \section{Conclusion}
 
 % 毛
+% (1) Summarize the contributions of the paper
+% (2) Discuss the limitations of the current work
+% (3) Suggest future research directions
 
 \section{Data and Code Availability}
 
-% 毛
-% Provide github link
+Stock price data used in this study is publicly available from Yahoo! Finance \cite{yahoofinance}, and is obtained using the yfinance Python library \cite{yfinance}.
+
+Cryptocurrency price data is obtained from the Binance API \cite{binanceapi} using the ccxt Python library \cite{ccxt}.
+
+All code for data fetching, data preprocessing, model training, and evaluation is available at \url{https://github.com/Dogeon188/StockSense}. Any updates or changes to the code will be reflected in the GitHub repository.
 
 \section{Author Contribution Statements}
 

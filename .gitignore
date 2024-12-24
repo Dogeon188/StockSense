@@ -176,6 +176,7 @@ logs/
 *.cls
 *.bbl
 *.blg
+*.out
 
 .DS_Store
 
