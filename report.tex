@@ -1,7 +1,5 @@
 \documentclass[conference]{IEEEtran}
 \IEEEoverridecommandlockouts
-% The preceding line is only needed to identify funding in the first footnote. If that is unneeded, please comment it out.
-%Template version as of 6/27/2024
 
 \usepackage{cite}
 \usepackage{amsmath,amssymb,amsfonts}
@@ -9,108 +7,183 @@
 \usepackage{graphicx}
 \usepackage{textcomp}
 \usepackage{xcolor}
-\def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
-    T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
 
 \begin{document}
 
 \title{Multi-Target Trading Automation with Deep Q Learning}
 
 \author{
-    \IEEEauthorblockN{Yan-Fu Chen}
-    \IEEEauthorblockA{
-        \textit{Dept. of Computer Science} \\
-        \textit{National Tsing-Hua University}\\
-        Hsinchu, Taiwan \\
-        aaaronyanfu@gmail.com
-    }
-    \and
-    \IEEEauthorblockN{Sheng-You Chien}
-    \IEEEauthorblockA{
-        \textit{Dept. of Computer Science} \\
-        \textit{National Tsing-Hua University}\\
-        Nantou, Taiwan \\
-        s99086tobby@gmail.com
-    }
-    \and
-    \IEEEauthorblockN{Yi-Ning Chang}
-    \IEEEauthorblockA{
-        \textit{Dept. of Computer Science} \\
-        \textit{National Tsing-Hua University}\\
-        Hsinchu, Taiwan \\
-        changyn@gapp.nthu.edu.tw
-    }
-    \and
-    \IEEEauthorblockN{Jie-Hung Chen}
-    \IEEEauthorblockA{
-        \textit{Dept. of Computer Science} \\
-        \textit{National Tsing-Hua University}\\
-        Kaoshiung, Taiwan \\
-        jiehongchen726@gmail.com
-    }
-    \and
-    \IEEEauthorblockN{Yi-Hsueh Chu}
-    \IEEEauthorblockA{
-        \textit{Dept. of Computer Science} \\
-        \textit{National Tsing-Hua University}\\
-        Taoyuan, Taiwan \\
-        ethan111062332@gapp.nthu.edu.tw
-    }
-    \and
-    \IEEEauthorblockN{Bo-Yi Mao}
-    \IEEEauthorblockA{
-        \textit{Dept. of Computer Science} \\
-        \textit{National Tsing-Hua University}\\
-        Taipei, Taiwan \\
-        dogeon188@gapp.nthu.edu.tw
-    }
+  \IEEEauthorblockN{Yan-Fu Chen}
+  \IEEEauthorblockA{
+    \textit{Dept. of Computer Science} \\
+    \textit{National Tsing-Hua University}\\
+    Hsinchu, Taiwan \\
+    aaaronyanfu@gmail.com
+  }
+  \and
+  \IEEEauthorblockN{Sheng-You Chien}
+  \IEEEauthorblockA{
+    \textit{Dept. of Computer Science} \\
+    \textit{National Tsing-Hua University}\\
+    Nantou, Taiwan \\
+    s99086tobby@gmail.com
+  }
+  \and
+  \IEEEauthorblockN{Yi-Ning Chang}
+  \IEEEauthorblockA{
+    \textit{Dept. of Computer Science} \\
+    \textit{National Tsing-Hua University}\\
+    Hsinchu, Taiwan \\
+    changyn@gapp.nthu.edu.tw
+  }
+  \and
+  \IEEEauthorblockN{Jie-Hung Chen}
+  \IEEEauthorblockA{
+    \textit{Dept. of Computer Science} \\
+    \textit{National Tsing-Hua University}\\
+    Kaoshiung, Taiwan \\
+    jiehongchen726@gmail.com
+  }
+  \and
+  \IEEEauthorblockN{Yi-Hsueh Chu}
+  \IEEEauthorblockA{
+    \textit{Dept. of Computer Science} \\
+    \textit{National Tsing-Hua University}\\
+    Taoyuan, Taiwan \\
+    ethan111062332@gapp.nthu.edu.tw
+  }
+  \and
+  \IEEEauthorblockN{Bo-Yi Mao}
+  \IEEEauthorblockA{
+    \textit{Dept. of Computer Science} \\
+    \textit{National Tsing-Hua University}\\
+    Taipei, Taiwan \\
+    dogeon188@gapp.nthu.edu.tw
+  }
 }
 
 \maketitle
 
 \begin{abstract}
 
-% 毛
+  % 毛
 
 \end{abstract}
 
 \begin{IEEEkeywords}
-deep reinforcement learning, deep Q-network, stock trading, algorithmic trading
+  deep reinforcement learning, deep Q-network, stock trading,
+  algorithmic trading
 \end{IEEEkeywords}
 
 \section{Introduction}
 
-An automatic, algorithmic way of profit generation in the stock market has long been a persuit of many. With the rise of machine learning and deep learning, the possibility of using these technologies to predict stock prices and make trading decisions has become a reality.
+An automatic, algorithmic way of stock trading, leveraging the
+swiftness and accuracy of computer systems, has long been a persuit
+of many. With the rise of machine learning and deep learning, the
+possibility of using these technologies to predict stock prices and
+make trading decisions has become a reality.
 
 % 毛
 
 \section{Related Works}
 
-% 朱 毛
+Even though the Efficient Market Hypothesis (EMH) posits that stock
+prices reflect all available information, and thus cannot be
+predicted consistently, many studies have shown that stock prices
+exhibit predictable patterns and can be forecasted to some extent.
+Various approaches have been proposed, differing in learning
+algorithms and objectives. In recent years, deep reinforcement
+learning (DRL) has gained significant attention due to its ability to
+learn complex trading strategies directly from market data.
+
+\subsection{Stock Price Prediction}
+
+Most studies have focused on predicting stock prices using various
+machine learning models. Traditional statistical methods such as
+ARIMA and GARCH have been widely used for time series forecasting.
+However, financial time series are often non-stationary and exhibit
+volatility changes, making it challenging to capture their underlying
+patterns with smoothened models.
+
+With the advent of machine learning and deep learning, more
+sophisticated models have been developed. Convolutional Neural
+Networks (CNNs) and Recurrent Neural Networks (RNNs), including Long
+Short-Term Memory (LSTM) networks, have shown promising results in
+stock price prediction. These models can automatically extract
+relevant features from raw data and capture temporal dependencies,
+making them well-suited for financial time series analysis.
+
+Support Vector Machines (SVMs) have been applied to stock predictions
+in many works. Phayung et al. \cite{phayung2013} applied Support
+Vector Regression (SVR) and combines different windowing functions to
+predict stock prices. Their model showed good performance in
+predicting short-term stock prices. Similarly, Tripathy
+\cite{tripathy2019} demonstrated that SVMs are effective in highly
+volatile markets, and it performs better in short-term and
+medium-term predictions compared to long-term predictions. Also,
+Zhang et al. \cite{zhang2017} proposed a periodic updating SVM model
+that can adapt to changing market conditions, which showed
+competitive performance compared to the random walk model proposed by the EMH.
+
+Zhang et al. \cite{zhang2017} proposed a State Frequency Memory (SFM)
+recurrent neural network to capture the multi-frequency trading
+patterns in stock prices. They demonstrated that their model showed
+competitive performance compared to traditional methods. Fischer and
+Krauss \cite{fischer2018} applied LSTM networks to rank stocks based
+on their future returns and showed that their model could outperform
+traditional ranking methods.
+
+More advanced models have also been applied to stock price prediction
+in recent years. Feng et al. \cite{feng2019an} proposed an
+adversarial learning framework that outperformed SOTA methods in
+terms of prediction accuracy. Koa et al. \cite{koa2023} developed a
+combination of Variational Autoencoders (VAEs) and diffusion models
+to capture the latent structure of financial time series. Gao et al.
+\cite{gao2023} proposeda transformer-based model that outperformed
+traditional methods in terms of portfolio returns and Sharpe ratios.
+
+\subsection{Algorithmic Trading}
+
+Despite these advancements in stock price prediction, they are
+usually evaluated on historical data and do not consider the trading
+strategy's performance in real-world scenarios. Such problem has been
+addressed by Feng et al. \cite{feng2019rank} who proposed an improved
+ranking model that can generate trading signals based on the
+predicted stock returns. Importantly, they considered the
+relationship between different stocks that conveys valuable
+information for trading decisions.
+
+% (RL & DQN) 朱
+% Summarize the works that use RL and DQN for stock trading
 
 \section{Methodology}
 
 \subsection{Multi-Target Trading Architecture}
 
 % 甫 桀
+% Introduce the architecture of RL training and trading system
 
-\subsection{Deep Neural Network}
+\subsection{Policy Network}
 
 % 甫 桀
+% Introduce the policy networks used
 
 \section{Experiments}
 
 \subsection{Dataset}
 
 % 朱 毛
+% Introduce the dataset used, and how it is preprocessed
 
 \subsection{Evaluation Metrics}
 
 % 張 簡
+% Introduce the evaluation metrics used
 
 \subsection{Results}
 
 % 張 簡
+% Show the results of the experiments and discuss them
 
 \section{Conclusion}
 
@@ -119,16 +192,13 @@ An automatic, algorithmic way of profit generation in the stock market has long 
 \section{Data and Code Availability}
 
 % 毛
+% Provide github link
 
 \section{Author Contribution Statements}
 
 % 毛
 
-\begin{thebibliography}{0}
- 
-\bibitem{customenv}
-    A. Gogikar, \emph{Multi-stock Algo-Trading environment for RL,} on Medium, Jun. 06, 2022. https://medium.com/@akhileshgogikar/custom-gym-environment-for-multi-stock-algo-trading-113b07dd445d (accessed Dec. 23, 2024).
-
-\end{thebibliography}
+\bibliographystyle{IEEEtran}
+\bibliography{refs}
 
 \end{document}
