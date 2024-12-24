@@ -25,7 +25,7 @@
         const chartOptions = {
             layout: {
                 textColor: 'black',
-                background: { color: 'rgba(230, 230, 230, 1)' },
+                background: { color: 'white' },
             },
         };
         chart = createChart(chartContainer as HTMLElement, chartOptions);

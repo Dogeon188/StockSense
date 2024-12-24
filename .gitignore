@@ -174,3 +174,8 @@ logs/
 *.synctex(busy)
 *.pdf
 *.cls
+
+.DS_Store
+
+output/
+cache/
