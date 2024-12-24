@@ -139,7 +139,7 @@ adversarial learning framework that outperformed SOTA methods in
 terms of prediction accuracy. Koa et al. \cite{koa2023} developed a
 combination of Variational Autoencoders (VAEs) and diffusion models
 to capture the latent structure of financial time series. Gao et al.
-\cite{gao2023} proposeda transformer-based model that outperformed
+\cite{gao2023} proposed a transformer-based model that outperformed
 traditional methods in terms of portfolio returns and Sharpe ratios.
 
 \subsection{Algorithmic Trading}
@@ -179,6 +179,38 @@ information for trading decisions.
 
 % 張 簡
 % Introduce the evaluation metrics used
+Backtesting is a common method to evaluate the performance of a predictive model in the financial domain.
+It simulates the trading strategy on historical data to estimate the strategy's performance.
+
+We use finRL \cite{liu2022finrldeepreinforcementlearning}, a powerful deep reinforcement learning library to backtest our trading strategy.
+Our reinforcement learning model is compared with the buy-and-hold strategy, which buys and holds the stock for the entire trading period, on the DJI Index.
+DJI Index is a stock market index that measures the stock performance of 30 large companies listed on stock exchanges in the United States.
+
+Our model is evaluated based on the following metrics:
+\begin{itemize}
+  \item Annualized Return: The annualized return of the trading strategy.
+  \item Cumulative Return: The cumulative return of the trading strategy.
+  \item Maximum Drawdown: The maximum loss from a peak (highest point) to a trough (lowest point) of a trading strategy.
+  \item Sharpe Ratio: As measure of the risk-adjusted return of the trading strategy, the Sharpe ratio is defined as: 
+  \begin{equation}
+    \text{Sharpe Ratio} = \frac{E[R_p - R_f]}{\sigma_p}
+  \end{equation}
+  where $R_p$ is the asset return of the trading strategy, $\sigma_p$ is the standard deviation of the asset excess return, and $R_f$ is the risk-free return (such as a U.S. Treasury security).
+  Therefore, The Sharpe ratio characterizes how well the return of an asset compensates the investor for the risk taken.
+  \item Calmar Ratio: 
+  The Calmar ratio is defined as the ratio of the annualized return to the maximum drawdown of the trading strategy.:
+  \begin{equation}
+    \text{Calmar Ratio} = \frac{\text{Annualized Return}}{\text{Maximum Drawdown}}
+  \end{equation}
+  Compared to the Sharpe ratio, the Calmar ratio focuses on the downside risk of the trading strategy.
+
+  \item Annualized Volatility: The annualized volatility of the trading strategy.
+  \item Sortino Ratio: Sortino ratio is a variation of the Sharpe ratio that only considers the downside risk of the trading strategy. It is defined as:
+  \begin{equation}
+    \text{Sortino Ratio} = \frac{E[R_p - R_f]}{\sigma_d}
+  \end{equation}
+  where $\sigma_d$ is the standard deviation of the asset downside return.
+\end{itemize}
 
 \subsection{Results}
 
