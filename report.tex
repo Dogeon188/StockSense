@@ -237,25 +237,36 @@ Our models are evaluated based on the following metrics:
   \item Annualized Return: The annualized return of the trading strategy.
   \item Cumulative Return: The cumulative return of the trading strategy.
   \item Maximum Drawdown: The maximum loss from a peak (highest point) to a trough (lowest point) of a trading strategy.
+  A higher maximum drawdown indicates the trading strategy has higher risk.
+  \item Annualized Volatility: The annualized volatility is defined as the standard deviation of the asset's yearly logarithmic return.
+  A higher annualized volatility indicates the trading strategy has higher risk.
   \item Sharpe Ratio: As measure of the risk-adjusted return of the trading strategy, the Sharpe ratio is defined as:
     \begin{equation}
       \text{Sharpe Ratio} = \frac{E[R_p - R_f]}{\sigma_p}
     \end{equation}
     where $R_p$ is the asset return of the trading strategy, $\sigma_p$ is the standard deviation of the asset excess return, and $R_f$ is the risk-free return (such as a U.S. Treasury security).
     Therefore, The Sharpe ratio characterizes how well the return of an asset compensates the investor for the risk taken.
+    A higher Sharpe ratio indicates the strategy can generate higher returns with lower risk.
   \item Calmar Ratio:
     The Calmar ratio is defined as the ratio of the annualized return to the maximum drawdown of the trading strategy:
     \begin{equation}
       \text{Calmar Ratio} = \frac{\text{Annualized Return}}{\text{Maximum Drawdown}}
     \end{equation}
+    A higher Calmar ratio indicates the strategy can generate higher returns with lower downside risk.
     Compared to the Sharpe ratio, the Calmar ratio focuses on the downside risk of the trading strategy.
-
-  \item Annualized Volatility: The annualized volatility of the trading strategy.
+ 
   \item Sortino Ratio: Sortino ratio is a variation of the Sharpe ratio that only considers the downside risk of the trading strategy. It is defined as:
     \begin{equation}
       \text{Sortino Ratio} = \frac{E[R_p - R_f]}{\sigma_d}
     \end{equation}
     where $\sigma_d$ is the standard deviation of the asset downside return.
+    A higher Sortino ratio indicates the strategy can generate higher returns with lower downside risk.
+  \item Omega Ratio: The Omega ratio is a risk-return measure that evaluates the probability of achieving a certain return. It is defined as:
+    \begin{equation}
+      \text{Omega Ratio} = \frac{P(R_p > R_f)}{P(R_p < R_f)}
+    \end{equation}
+    where $P(R_p > R_f)$ is the probability of achieving a return greater than the risk-free rate, and $P(R_p < R_f)$ is the probability of achieving a return less than the risk-free rate.
+    A higher Omega ratio indicates the strategy has a higher probability of achieving a return greater than the risk-free rate.
 \end{itemize}
 
 \subsection{Results}
