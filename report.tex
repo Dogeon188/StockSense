@@ -99,32 +99,19 @@ More advanced models have also been applied to stock price prediction in recent 
 
 \subsection{Algorithmic Trading}
 
-Despite these advancements in stock price prediction, they are usually evaluated on historical data and do not consider the trading strategy's performance in real-world scenarios. Such problem has been addressed by Feng et al. \cite{feng2019rank} who proposed an improved ranking model that can generate trading signals based on the predicted stock returns. Importantly, they considered the relationship between different stocks that conveys valuable information for trading decisions.
+Deep reinforcement learning (DRL), a branch of machine learning where an agent learns to make decisions by interacting with an environment to maximize cumulative rewards, is capable of learning complex trading strategies directly from market data, making it an attractive approach for algorithmic trading. For example, Deep Q-Learning (DQN) has been widely applied to stock trading for decision-making in dynamic and uncertain environments. Jiang et al. \cite{jiang2017} developed a deep reinforcement learning model that can adapt to changing market conditions and showed competitive performance compared to traditional methods. Liu et al. \cite{liu2022finrl} proposed a deep reinforcement learning library, FinRL, tailored for financial markets, enabling multi-stock trading strategies. Their library provides a comprehensive set of tools for developing and evaluating trading strategies using reinforcement learning, including various environments, algorithms, and evaluation metrics.
 
-Deep reinforcement learning (DRL) is capable of learning complex trading strategies directly from market data, making it an attractive approach for algorithmic trading. For example, Deep Q-Learning (DQN) has been widely applied to stock trading for decision-making in dynamic and uncertain environments.
+Despite these advancements in stock price prediction, they are usually evaluated on historical data and do not consider the trading strategy's performance in real-world scenarios. few works have addressed the challenges of multi-target trading, where the goal is to optimize trading decisions across a portfolio of assets. Multi-target trading involves managing multiple stocks simultaneously, considering their interdependencies and correlations to maximize overall portfolio returns.
 
-% Gu et al. \cite{gu2018} proposed a deep Q-learning framework for stock trading, which outperformed traditional methods in terms of portfolio returns and Sharpe ratios. Jiang et al. \cite{jiang2017} developed a deep reinforcement learning model that can adapt to changing market conditions and showed competitive performance compared to traditional methods.
+One notable work in this area is by Feng et al. \cite{feng2019rank}, who proposed an improved ranking model that can generate trading signals based on the predicted stock returns. Importantly, they considered the relationship between different stocks that conveys valuable information for trading decisions.
 
-\textbf{Notable Frameworks and Tools:}
-\begin{itemize}
-    \item FinRL: A deep reinforcement learning library tailored for financial markets, enabling multi-stock trading strategies.
-    \item Gym Environments: Customized gym environments (e.g. multi-stock algo trading) support RL-based experimentation on financial datasets.
-\end{itemize}
+\section{Problem Statement}
 
-\textbf{Data Sources and Practical Examples:}
-\begin{itemize}
-    \item Yahoo! Finance: A popular data source for historical stock market data, used for training and testing RL models.
-    \item Baostock: A Chinese stock market data API that provides real-time and historical data for stock trading strategies.
-\end{itemize}
+With the rise of all the aforementioned technologies, few works have made a formal attempt to combine algorithmic trading, deep reinforcement learning, and multi-target trading. In this paper, we aim to address this gap by summarizing and extending the current state-of-the-art algorithms and methodologies for multi-target trading automation using deep reinforcement learning, and comparing their performance on a real-world dataset.
 
 \section{Methodology}
 
-\subsection{Multi-Target Trading Architecture}
-
-% 甫 桀
-% Introduce the architecture of RL training and trading system
-
-The proposed multi-target trading architecture is designed to handle multiple stock assets simultaneously, optimizing trading decisions across a portfolio rather than focusing on a single stock. To address this challenge, we leverage reinforcement learning (RL), a branch of machine learning where an agent learns to make decisions by interacting with an environment to maximize cumulative rewards. Below, we describe the architecture and its components in detail.
+The utilized multi-target trading architecture is designed to handle multiple stock assets simultaneously, optimizing trading decisions across a portfolio rather than focusing on a single stock. To address this challenge, we leverage DRL algorithms with a flexible environment that supports multi-asset trading. Below, we outline the key components of the architecture:
 
 \subsection{Reinforcement Learning Overview}
 
@@ -196,11 +183,6 @@ To solve the trading problem effectively, we utilize three reinforcement learnin
 
 Each algorithm is trained to optimize portfolio returns while managing risks and transaction costs.
 
-\subsection{Policy Network}
-
-% 甫 桀
-% Introduce the policy networks used
-
 \section{Experiments}
 
 \subsection{Dataset}
@@ -214,7 +196,7 @@ The dataset is split into three parts:
   \item Testing Data: Last 20\% of the data (from December 7, 2019 to December 1, 2024).
 \end{itemize}
 
-The training data is used to train the reinforcement learning models, while the validation data is used to tune hyperparameters and prevent overfitting. The testing data is used to evaluate the performance of the trained models. 
+The training data is used to train the reinforcement learning models, while the validation data is used to tune hyperparameters and prevent overfitting. The testing data is used to evaluate the performance of the trained models.
 
 To visualize the historical stock prices used in our experiments, we plot the closing prices of the selected stocks over the entire dataset period in Figure \ref{fig:price_history}.
 
@@ -230,16 +212,16 @@ To visualize the historical stock prices used in our experiments, we plot the cl
 % Introduce the evaluation metrics used
 Backtesting is a common method to evaluate the performance of a predictive model in the financial domain. It simulates the trading strategy on historical data to estimate the strategy's performance.
 
-We use FinRL \cite{liu2022finrldeepreinforcementlearning}, a powerful deep reinforcement learning library to perform backtest on our trading strategy. Our reinforcement learning model is compared with the buy-and-hold strategy, which buys and holds the stock for the entire trading period, on the DJI Index. DJI Index is a stock market index that measures the stock performance of 30 large companies listed on stock exchanges in the United States.
+We use FinRL \cite{liu2022finrl}, a powerful deep reinforcement learning library to perform backtest on our trading strategy. Our reinforcement learning model is compared with the buy-and-hold strategy, which buys and holds the stock for the entire trading period, on the DJI Index. DJI Index is a stock market index that measures the stock performance of 30 large companies listed on stock exchanges in the United States.
 
 Our models are evaluated based on the following metrics:
 \begin{itemize}
   \item Annualized Return: The annualized return of the trading strategy.
   \item Cumulative Return: The cumulative return of the trading strategy.
   \item Maximum Drawdown: The maximum loss from a peak (highest point) to a trough (lowest point) of a trading strategy.
-  A higher maximum drawdown indicates the trading strategy has higher risk.
+    A higher maximum drawdown indicates the trading strategy has higher risk.
   \item Annualized Volatility: The annualized volatility is defined as the standard deviation of the asset's yearly logarithmic return.
-  A higher annualized volatility indicates the trading strategy has higher risk.
+    A higher annualized volatility indicates the trading strategy has higher risk.
   \item Sharpe Ratio: As measure of the risk-adjusted return of the trading strategy, the Sharpe ratio is defined as:
     \begin{equation}
       \text{Sharpe Ratio} = \frac{E[R_p - R_f]}{\sigma_p}
@@ -254,7 +236,7 @@ Our models are evaluated based on the following metrics:
     \end{equation}
     A higher Calmar ratio indicates the strategy can generate higher returns with lower downside risk.
     Compared to the Sharpe ratio, the Calmar ratio focuses on the downside risk of the trading strategy.
- 
+
   \item Sortino Ratio: Sortino ratio is a variation of the Sharpe ratio that only considers the downside risk of the trading strategy. It is defined as:
     \begin{equation}
       \text{Sortino Ratio} = \frac{E[R_p - R_f]}{\sigma_d}
