@@ -164,6 +164,78 @@ information for trading decisions.
 % 甫 桀
 % Introduce the architecture of RL training and trading system
 
+The proposed multi-target trading architecture is designed to handle multiple stock assets simultaneously, optimizing trading decisions across a portfolio rather than focusing on a single stock. To address this challenge, we leverage reinforcement learning (RL), a branch of machine learning where an agent learns to make decisions by interacting with an environment to maximize cumulative rewards. Below, we describe the architecture and its components in detail.
+
+\subsection{Reinforcement Learning Overview}
+
+Reinforcement learning is based on the interaction between an \textbf{agent} and an \textbf{environment}. The agent observes the state of the environment, takes actions, and receives rewards based on the results of those actions. The goal of the agent is to learn an optimal policy that maximizes the cumulative reward over time.
+
+\begin{itemize}
+    \item \textbf{State ($S_t$)}: Represents the information observed by the agent from the environment at time $t$.
+    \item \textbf{Action ($A_t$)}: The decision made by the agent at time $t$, such as buying, selling, or holding stocks.
+    \item \textbf{Reward ($R_t$)}: A scalar feedback signal that evaluates the action taken by the agent in a specific state.
+    \item \textbf{Policy ($\pi$)}: A mapping from states to actions, guiding the agent's decision-making process.
+    \item \textbf{Q-Function ($Q(s, a)$)}: Represents the expected cumulative reward of taking action $a$ in state $s$ and following the policy thereafter.
+\end{itemize}
+
+We use advanced RL algorithms such as \textit{Deep Q-Network (DQN)}, \textit{Advantage Actor-Critic (A2C)}, and \textit{Proximal Policy Optimization (PPO)} to train our agents.
+
+\subsection{Environment}
+
+The environment simulates a stock market, incorporating realistic features such as price changes, transaction costs, and investment constraints. It provides the agent with state information derived from historical market data, enabling the agent to learn and make trading decisions.
+
+\begin{itemize}
+    \item \textbf{Data Source}: We use Yahoo! Finance's API to fetch stock market data. The dataset spans from 2000 to 2022 for training and from January 1, 2023, to December 1, 2024, for testing. The data includes the daily open, high, low, close prices, and trading volume for each stock.
+    \item \textbf{Implementation}: The environment is implemented by extending the Gymnasium \texttt{Env} class, allowing seamless integration with reinforcement learning frameworks.
+\end{itemize}
+
+\subsection{State Representation}
+
+The state representation is critical for effective learning. Since raw stock market data varies greatly in scale and lacks direct interpretability, we preprocess and normalize it into meaningful features:
+
+\begin{itemize}
+    \item \textbf{Normalized Price Features}:
+    \begin{align*}
+    \text{Open\%} &= \frac{\text{Open}}{\text{Close}}, \quad \text{High\%} = \frac{\text{High}}{\text{Close}}, \quad \text{Low\%} = \frac{\text{Low}}{\text{Close}}
+    \end{align*}
+    \item \textbf{Percentage Change of Close}: Measures the relative change in the close price compared to the previous day.
+    \item \textbf{Normalized Volume}: Volume as a percentage of the maximum trading volume within a specified time window (100 days).
+\end{itemize}
+
+The agent observes the last five days of these features, creating a sliding window of information to capture short-term trends.
+
+\subsection{Actions}
+
+The action space defines how the agent interacts with the environment. In our implementation, we support two modes of trading actions:
+
+\begin{enumerate}
+    \item \textbf{All-In Mode}: The agent selects a single stock to allocate 100\% of its capital.
+    \item \textbf{Proportional Allocation Mode}: The agent determines the percentage of capital to allocate across multiple stocks, enabling diversified strategies.
+\end{enumerate}
+
+This flexibility allows the agent to explore both high-risk and balanced investment strategies.
+
+\subsection{Reward Function}
+
+We use the \textbf{logarithmic gain ratio} as the reward function to evaluate the performance of the agent's decisions. This reward structure emphasizes proportional gains, penalizes losses, and encourages consistent growth. The reward for a given action is calculated as:
+\begin{align*}
+R_t = \log\left(\frac{\text{Portfolio Value}_{t}}{\text{Portfolio Value}_{t-1}}\right)
+\end{align*}
+
+This formulation accounts for transaction costs and ensures that the agent focuses on maximizing net returns.
+
+\subsection{Agent Design}
+
+To solve the trading problem effectively, we utilize three reinforcement learning algorithms:
+
+\begin{itemize}
+    \item \textbf{Deep Q-Network (DQN)}: Uses a neural network to approximate the Q-function. It is particularly effective for discrete action spaces and leverages experience replay and target networks for stability.
+    \item \textbf{Advantage Actor-Critic (A2C)}: A policy-gradient method that combines value-based and policy-based approaches. It learns both a value function (critic) and a policy (actor) simultaneously, enabling efficient exploration.
+    \item \textbf{Proximal Policy Optimization (PPO)}: A robust and scalable policy-gradient method. It improves training stability by constraining policy updates to avoid drastic changes, ensuring better convergence.
+\end{itemize}
+
+Each algorithm is trained to optimize portfolio returns while managing risks and transaction costs.
+
 \subsection{Policy Network}
 
 % 甫 桀
