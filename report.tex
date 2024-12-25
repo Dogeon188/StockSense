@@ -263,9 +263,9 @@ As illustrated in the figure:
     \item \textbf{Sharpe Ratio:} The Sharpe ratio for DQN is notably higher than that of most baseline strategies, indicating superior risk-adjusted returns. This metric highlights the model's ability to balance returns against market volatility effectively.
     \item \textbf{Maximum Drawdown:} Despite its strengths, the DQN model exhibits a relatively large maximum drawdown. This underscores its susceptibility to sharp market downturns, potentially due to overfitting or high sensitivity to volatile conditions.
     \item \textbf{Baseline Observations}
-For baseline strategies, the following observations are made regarding the Hold-and-Wait, A2C, and PPO approaches:
+For baseline strategies, the following observations are made regarding the Buy-and-Hold, A2C, and PPO approaches:
 \begin{itemize}
-    \item \textbf{Hold-and-Wait:} This strategy delivers stable returns with a relatively higher Sharpe ratio compared to other baseline models. While it minimizes risk and avoids major drawdowns, its lack of adaptability prevents it from taking full advantage of upward market trends, resulting in moderate cumulative returns.
+    \item \textbf{Buy-and-Hold:} This strategy delivers stable returns with a relatively higher Sharpe ratio compared to other baseline models. While it minimizes risk and avoids major drawdowns, its lack of adaptability prevents it from taking full advantage of upward market trends, resulting in moderate cumulative returns.
     \item \textbf{A2C (Advantage Actor-Critic):} A2C achieves moderate performance with higher cumulative returns than PPO but struggles to match the adaptability of more sophisticated models. Its Sharpe ratio indicates balanced risk-adjusted returns, though it remains lower than that of DQN.
     \item \textbf{PPO (Proximal Policy Optimization):} Although PPO demonstrates some capability in managing risk, its cumulative returns and Sharpe ratio are the lowest among the three. This suggests that PPO failed to effectively capture upward market trends during the test period and did not outperform the other baseline strategies in balancing risk and reward
 \end{itemize}
