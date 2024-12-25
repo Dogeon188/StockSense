@@ -272,25 +272,6 @@ Table \ref{tab:results} and Figure \ref{fig:returns} present the performance com
 
 \end{itemize}
 
-\section{Discussion}
-This section analyzes the experimental results and provides potential insights and improvements for the DQN model based on its performance.
-
-\subsection{Analysis of Results}
-\begin{itemize}
-  \item \textbf{DQN's Strengths:} The exceptional cumulative returns achieved by the DQN model stem from its use of deep Q-learning, which enables it to efficiently learn optimal policies for asset allocation by mapping states to value estimates. This adaptability enables the model to exploit trends in high-performing assets, such as AAPL and MSFT, particularly during periods of rapid growth. Furthermore, the consistently high Sharpe ratio demonstrates the model's capacity to manage risk effectively while maximizing returns.
-  \item \textbf{Drawdown Challenges:} Despite its strong performance metrics, the DQN model's larger maximum drawdown compared to baseline strategies suggests a potential vulnerability to sudden market downturns. This may arise from overfitting to specific market conditions during training or an over-reliance on short-term signals that increase risk exposure.
-\end{itemize}
-
-\subsection{Potential Improvements}
-\begin{itemize}
-  \item \textbf{Regularization and Robustness:} To address overfitting, implementing regularization techniques, such as dropout layers or weight decay, could improve the model's generalization capabilities. Additionally, ensemble methods could provide more stable performance across different market conditions by reducing the impact of outliers.
-  \item \textbf{Risk Management:} Incorporating explicit risk management objectives, such as drawdown constraints or volatility penalties, into the reward function could help mitigate excessive risk exposure. By aligning the model's behavior with practical investment strategies, these enhancements could improve its robustness in real-world applications.
-  \item \textbf{Feature Engineering:} Expanding the feature set with macroeconomic indicators, such as interest rates or inflation data, and alternative data sources, such as sentiment analysis from news or social media, could improve the model's predictive capabilities. Additionally, incorporating sector-specific indicators may help capture trends that are unique to particular industries.
-  \item \textbf{Dynamic Reward Functions:} Modifying the reward function to account for long-term performance metrics, such as capital preservation or reduced portfolio turnover, could encourage more sustainable and consistent investment strategies. This would also address concerns regarding high transaction costs associated with frequent portfolio rebalancing.
-\end{itemize}
-
-In conclusion, while the DQN model demonstrates significant potential in outperforming traditional portfolio management strategies, careful consideration of its limitations, particularly regarding risk and robustness, is crucial for practical deployment. Future research could explore the integration of multi-agent reinforcement learning frameworks or hybrid approaches to enhance the model's adaptability and performance in complex and dynamic financial markets.
-
 \begin{table}[htbp]
   \centering
   \caption{Performance comparison of the strategies on our dataset.}
@@ -326,6 +307,25 @@ In conclusion, while the DQN model demonstrates significant potential in outperf
   \caption{Performance comparison of the strategies on our dataset.}
   \label{fig:returns}
 \end{figure}
+
+\section{Discussion}
+This section analyzes the experimental results and provides potential insights and improvements for the DQN model based on its performance.
+
+\subsection{Analysis of Results}
+\begin{itemize}
+  \item \textbf{DQN's Strengths:} The exceptional cumulative returns achieved by the DQN model stem from its use of deep Q-learning, which enables it to efficiently learn optimal policies for asset allocation by mapping states to value estimates. This adaptability enables the model to exploit trends in high-performing assets, such as AAPL and MSFT, particularly during periods of rapid growth. Furthermore, the consistently high Sharpe ratio demonstrates the model's capacity to manage risk effectively while maximizing returns.
+  \item \textbf{Drawdown Challenges:} Despite its strong performance metrics, the DQN model's larger maximum drawdown compared to baseline strategies suggests a potential vulnerability to sudden market downturns. This may arise from overfitting to specific market conditions during training or an over-reliance on short-term signals that increase risk exposure.
+\end{itemize}
+
+\subsection{Potential Improvements}
+\begin{itemize}
+  \item \textbf{Regularization and Robustness:} To address overfitting, implementing regularization techniques, such as dropout layers or weight decay, could improve the model's generalization capabilities. Additionally, ensemble methods could provide more stable performance across different market conditions by reducing the impact of outliers.
+  \item \textbf{Risk Management:} Incorporating explicit risk management objectives, such as drawdown constraints or volatility penalties, into the reward function could help mitigate excessive risk exposure. By aligning the model's behavior with practical investment strategies, these enhancements could improve its robustness in real-world applications.
+  \item \textbf{Feature Engineering:} Expanding the feature set with macroeconomic indicators, such as interest rates or inflation data, and alternative data sources, such as sentiment analysis from news or social media, could improve the model's predictive capabilities. Additionally, incorporating sector-specific indicators may help capture trends that are unique to particular industries.
+  \item \textbf{Dynamic Reward Functions:} Modifying the reward function to account for long-term performance metrics, such as capital preservation or reduced portfolio turnover, could encourage more sustainable and consistent investment strategies. This would also address concerns regarding high transaction costs associated with frequent portfolio rebalancing.
+\end{itemize}
+
+In conclusion, while the DQN model demonstrates significant potential in outperforming traditional portfolio management strategies, careful consideration of its limitations, particularly regarding risk and robustness, is crucial for practical deployment. Future research could explore the integration of multi-agent reinforcement learning frameworks or hybrid approaches to enhance the model's adaptability and performance in complex and dynamic financial markets.
 
 \section{Conclusion}
 
