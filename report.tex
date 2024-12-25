@@ -245,6 +245,52 @@ Our models are evaluated based on the following metrics:
 \end{itemize}
 
 \subsection{Results}
+This section presents the experimental results of applying different models and strategies to stock market prediction and portfolio management. The model we implemented in this study is the Deep Q-Network (DQN), and it is compared against several baseline strategies.
+
+\subsubsection{Asset Prices Over Time}
+Figure \ref{fig:price_history} shows the historical performance of selected stocks, including MSFT, AAPL, AXP, AMGN, CSCO, HON, IBM, and KO. The plot is segmented into three periods: the training period (green background), the validation period (yellow background), and the test period (pink background). 
+
+From the chart, it is evident that AAPL and MSFT exhibit the most significant growth trajectories, particularly during the test period, where their values rise steeply. MSFT surpasses all other stocks in terms of cumulative performance, highlighting its dominance in the observed timeframe. This exceptional growth could be attributed to factors such as market innovation, strong earnings, or favorable macroeconomic conditions. Conversely, stocks like KO and IBM display relatively flat trajectories, indicating limited growth potential or consistent performance without major volatility. 
+
+AMGN demonstrates a notable rise during the validation period but appears to plateau in the test period, which could reflect sector-specific trends or external market influences that hindered its continued growth. AXP, on the other hand, shows moderate growth but remains significantly behind the tech-driven advancements of AAPL and MSFT, underscoring the variability in performance across different industries.
+
+\subsubsection{Model Performance Comparison}
+The bar chart in Figure \ref{fig:returns} highlights the performance of the DQN model compared to baseline strategies, measured in terms of cumulative returns, Sharpe ratio, and maximum drawdown.
+
+As illustrated in the figure:
+\begin{itemize}
+    \item \textbf{Cumulative Returns:} The DQN model achieves the highest cumulative returns among all strategies, significantly outperforming traditional approaches like Buy-and-Hold (B\&H). This demonstrates the DQN's capability to dynamically adjust portfolio allocations and capitalize on market inefficiencies.
+    \item \textbf{Sharpe Ratio:} The Sharpe ratio for DQN is notably higher than that of most baseline strategies, indicating superior risk-adjusted returns. This metric highlights the model's ability to balance returns against market volatility effectively.
+    \item \textbf{Maximum Drawdown:} Despite its strengths, the DQN model exhibits a relatively large maximum drawdown. This underscores its susceptibility to sharp market downturns, potentially due to overfitting or high sensitivity to volatile conditions.
+    \item \textbf{Baseline Observations}
+For baseline strategies, the following observations are made regarding the Hold-and-Wait, A2C, and PPO approaches:
+\begin{itemize}
+    \item \textbf{Hold-and-Wait:} This strategy delivers stable returns with a relatively higher Sharpe ratio compared to other baseline models. While it minimizes risk and avoids major drawdowns, its lack of adaptability prevents it from taking full advantage of upward market trends, resulting in moderate cumulative returns.
+    \item \textbf{A2C (Advantage Actor-Critic):} A2C achieves moderate performance with higher cumulative returns than PPO but struggles to match the adaptability of more sophisticated models. Its Sharpe ratio indicates balanced risk-adjusted returns, though it remains lower than that of DQN.
+    \item \textbf{PPO (Proximal Policy Optimization):} Although PPO demonstrates some capability in managing risk, its cumulative returns and Sharpe ratio are the lowest among the three. This suggests that PPO failed to effectively capture upward market trends during the test period and did not outperform the other baseline strategies in balancing risk and reward
+\end{itemize}
+
+\end{itemize}
+
+\section{Discussion}
+This section analyzes the experimental results and provides potential insights and improvements for the DQN model based on its performance.
+
+\subsection{Analysis of Results}
+\begin{itemize}
+    \item \textbf{DQN's Strengths:} The exceptional cumulative returns achieved by the DQN model stem from its use of deep Q-learning, which enables it to efficiently learn optimal policies for asset allocation by mapping states to value estimates. This adaptability enables the model to exploit trends in high-performing assets, such as AAPL and MSFT, particularly during periods of rapid growth. Furthermore, the consistently high Sharpe ratio demonstrates the model's capacity to manage risk effectively while maximizing returns.
+    \item \textbf{Drawdown Challenges:} Despite its strong performance metrics, the DQN model's larger maximum drawdown compared to baseline strategies suggests a potential vulnerability to sudden market downturns. This may arise from overfitting to specific market conditions during training or an over-reliance on short-term signals that increase risk exposure.
+\end{itemize}
+
+\subsection{Potential Improvements}
+\begin{itemize}
+    \item \textbf{Regularization and Robustness:} To address overfitting, implementing regularization techniques, such as dropout layers or weight decay, could improve the model's generalization capabilities. Additionally, ensemble methods could provide more stable performance across different market conditions by reducing the impact of outliers.
+    \item \textbf{Risk Management:} Incorporating explicit risk management objectives, such as drawdown constraints or volatility penalties, into the reward function could help mitigate excessive risk exposure. By aligning the model's behavior with practical investment strategies, these enhancements could improve its robustness in real-world applications.
+    \item \textbf{Feature Engineering:} Expanding the feature set with macroeconomic indicators, such as interest rates or inflation data, and alternative data sources, such as sentiment analysis from news or social media, could improve the model's predictive capabilities. Additionally, incorporating sector-specific indicators may help capture trends that are unique to particular industries.
+    \item \textbf{Dynamic Reward Functions:} Modifying the reward function to account for long-term performance metrics, such as capital preservation or reduced portfolio turnover, could encourage more sustainable and consistent investment strategies. This would also address concerns regarding high transaction costs associated with frequent portfolio rebalancing.
+\end{itemize}
+
+In conclusion, while the DQN model demonstrates significant potential in outperforming traditional portfolio management strategies, careful consideration of its limitations, particularly regarding risk and robustness, is crucial for practical deployment. Future research could explore the integration of multi-agent reinforcement learning frameworks or hybrid approaches to enhance the model's adaptability and performance in complex and dynamic financial markets.
+
 
 % 張 簡
 % Discuss the results of the experiments
