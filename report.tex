@@ -67,19 +67,23 @@
 
 \begin{abstract}
 
-  % 毛
+  In this paper, we leverage deep reinforcement learning (DRL) to automate multi-target trading, where the goal is to optimize trading decisions across a portfolio of assets. We propose a flexible and extensible architecture that supports multiple stocks, various trading strategies, and different reinforcement learning algorithms. We evaluate the performance of our models on a real-world dataset and compare them with traditional buy-and-hold strategies.
+
+  Our results show that our DRL models outperform the buy-and-hold strategy in terms of annualized return and cumulative return. However, the DRL models exhibit higher risk, which demonstrates the trade-off between return and risk in multi-target trading.
 
 \end{abstract}
 
 \begin{IEEEkeywords}
-  deep reinforcement learning, deep Q-network, stock trading, algorithmic trading
+  computational finance, deep reinforcement learning, algorithmic trading, multi-target trading
 \end{IEEEkeywords}
 
 \section{Introduction}
 
 An automatic, algorithmic way of stock trading, leveraging the swiftness and accuracy of computer systems, has long been a persuit of many. With the rise of machine learning and deep learning, the possibility of using these technologies to predict stock prices and make trading decisions has become a reality.
 
-% 毛
+Many studies have tackled the problem of stock price prediction using machine learning models, such as Support Vector Machines (SVMs), Convolutional Neural Networks (CNNs), and Recurrent Neural Networks (RNNs). These models have shown promising results in forecasting stock prices, capturing temporal dependencies, and extracting relevant features from raw data.
+
+However, few works have made a formal attempt to combine algorithmic trading, deep reinforcement learning, and multi-target trading. In this paper, we aim to address this gap by summarizing and extending the current state-of-the-art algorithms and methodologies for multi-target trading automation using deep reinforcement learning, and comparing their performance on a real-world dataset.
 
 \section{Related Works}
 
@@ -104,10 +108,6 @@ Deep reinforcement learning (DRL), a branch of machine learning where an agent l
 Despite these advancements in stock price prediction, they are usually evaluated on historical data and do not consider the trading strategy's performance in real-world scenarios. few works have addressed the challenges of multi-target trading, where the goal is to optimize trading decisions across a portfolio of assets. Multi-target trading involves managing multiple stocks simultaneously, considering their interdependencies and correlations to maximize overall portfolio returns.
 
 One notable work in this area is by Feng et al. \cite{feng2019rank}, who proposed an improved ranking model that can generate trading signals based on the predicted stock returns. Importantly, they considered the relationship between different stocks that conveys valuable information for trading decisions.
-
-\section{Problem Statement}
-
-With the rise of all the aforementioned technologies, few works have made a formal attempt to combine algorithmic trading, deep reinforcement learning, and multi-target trading. In this paper, we aim to address this gap by summarizing and extending the current state-of-the-art algorithms and methodologies for multi-target trading automation using deep reinforcement learning, and comparing their performance on a real-world dataset.
 
 \section{Methodology}
 
@@ -218,37 +218,30 @@ Our models are evaluated based on the following metrics:
 \begin{itemize}
   \item Annualized Return: The annualized return of the trading strategy.
   \item Cumulative Return: The cumulative return of the trading strategy.
-  \item Maximum Drawdown: The maximum loss from a peak (highest point) to a trough (lowest point) of a trading strategy.
-    A higher maximum drawdown indicates the trading strategy has higher risk.
-  \item Annualized Volatility: The annualized volatility is defined as the standard deviation of the asset's yearly logarithmic return.
-    A higher annualized volatility indicates the trading strategy has higher risk.
+  \item Maximum Drawdown: The maximum loss from a peak (highest point) to a trough (lowest point) of a trading strategy. A higher maximum drawdown indicates the trading strategy has higher risk.
+  \item Annualized Volatility: The annualized volatility is defined as the standard deviation of the asset's yearly logarithmic return. A higher annualized volatility indicates the trading strategy has higher risk.
   \item Sharpe Ratio: As measure of the risk-adjusted return of the trading strategy, the Sharpe ratio is defined as:
     \begin{equation}
       \text{Sharpe Ratio} = \frac{E[R_p - R_f]}{\sigma_p}
     \end{equation}
-    where $R_p$ is the asset return of the trading strategy, $\sigma_p$ is the standard deviation of the asset excess return, and $R_f$ is the risk-free return (such as a U.S. Treasury security).
-    Therefore, The Sharpe ratio characterizes how well the return of an asset compensates the investor for the risk taken.
-    A higher Sharpe ratio indicates the strategy can generate higher returns with lower risk.
+    where $R_p$ is the asset return of the trading strategy, $\sigma_p$ is the standard deviation of the asset excess return, and $R_f$ is the risk-free return (such as a U.S. Treasury security). Therefore, The Sharpe ratio characterizes how well the return of an asset compensates the investor for the risk taken. A higher Sharpe ratio indicates the strategy can generate higher returns with lower risk.
   \item Calmar Ratio:
     The Calmar ratio is defined as the ratio of the annualized return to the maximum drawdown of the trading strategy:
     \begin{equation}
       \text{Calmar Ratio} = \frac{\text{Annualized Return}}{\text{Maximum Drawdown}}
     \end{equation}
-    A higher Calmar ratio indicates the strategy can generate higher returns with lower downside risk.
-    Compared to the Sharpe ratio, the Calmar ratio focuses on the downside risk of the trading strategy.
+    A higher Calmar ratio indicates the strategy can generate higher returns with lower downside risk. Compared to the Sharpe ratio, the Calmar ratio focuses on the downside risk of the trading strategy.
 
   \item Sortino Ratio: Sortino ratio is a variation of the Sharpe ratio that only considers the downside risk of the trading strategy. It is defined as:
     \begin{equation}
       \text{Sortino Ratio} = \frac{E[R_p - R_f]}{\sigma_d}
     \end{equation}
-    where $\sigma_d$ is the standard deviation of the asset downside return.
-    A higher Sortino ratio indicates the strategy can generate higher returns with lower downside risk.
+    where $\sigma_d$ is the standard deviation of the asset downside return. A higher Sortino ratio indicates the strategy can generate higher returns with lower downside risk.
   \item Omega Ratio: The Omega ratio is a risk-return measure that evaluates the probability of achieving a certain return. It is defined as:
     \begin{equation}
       \text{Omega Ratio} = \frac{P(R_p > R_f)}{P(R_p < R_f)}
     \end{equation}
-    where $P(R_p > R_f)$ is the probability of achieving a return greater than the risk-free rate, and $P(R_p < R_f)$ is the probability of achieving a return less than the risk-free rate.
-    A higher Omega ratio indicates the strategy has a higher probability of achieving a return greater than the risk-free rate.
+    where $P(R_p > R_f)$ is the probability of achieving a return greater than the risk-free rate, and $P(R_p < R_f)$ is the probability of achieving a return less than the risk-free rate. A higher Omega ratio indicates the strategy has a higher probability of achieving a return greater than the risk-free rate.
 \end{itemize}
 
 \subsection{Results}
@@ -280,7 +273,6 @@ Our models are evaluated based on the following metrics:
     Sortino Ratio & 1.5270 & 1.4550 & 0.2661 & \underline{3.2108} \\
     \hline
   \end{tabular}
-  % footnote
   \begin{tabular}{p{0.45\textwidth}}
     \textit{Note:} The best performance for each metric is underlined.
   \end{tabular}
@@ -295,10 +287,11 @@ Our models are evaluated based on the following metrics:
 
 \section{Conclusion}
 
-% 毛
-% (1) Summarize the contributions of the paper
-% (2) Discuss the limitations of the current work
-% (3) Suggest future research directions
+In this paper, we proposed a flexible and extensible architecture for multi-target trading automation using deep reinforcement learning. We evaluated several reinforcement learning algorithms, including DQN, A2C, and PPO, on a real-world dataset containing historical stock price data for multiple assets.
+
+Our results show that our DRL models outperform the baseline buy-and-hold strategy in terms of annualized return and cumulative return. However, the DRL models exhibit higher risk, as indicated by the maximum drawdown and annualized volatility. As our model is optimized for return, such risky behavior is expected. This demonstrates the trade-off between return and risk in multi-target trading.
+
+The forementioned results also suggest that our models may benefit from additional risk management techniques to reduce downside risk and improve overall performance. With a more sophisticated reward function that considers risk-adjusted returns, we can potentially achieve a better balance between return and risk. Furthermore, incorporating additional features such as technical indicators, market sentiment, and macroeconomic factors could enhance the model's predictive power and robustness. Future work could explore these directions to further improve the performance of our models.
 
 \section{Data and Code Availability}
 
@@ -308,7 +301,14 @@ All code for data fetching, data preprocessing, model training, and evaluation i
 
 \section{Author Contribution Statements}
 
-% 毛
+\begin{itemize}
+  \item \textbf{Y. Chen}: study research, methodology design.
+  \item \textbf{S. Chien}: methodology design, result analysis.
+  \item \textbf{Y. Chang}: result analysis, proposal presentation, evaluation metrics.
+  \item \textbf{J. Chen}: methodology design, evaluation metrics.
+  \item \textbf{Y. Chu}: study research, data curation.
+  \item \textbf{B. Mao}: data curation, video presentation, project outline.
+\end{itemize}
 
 \bibliographystyle{IEEEtran}
 \bibliography{refs}

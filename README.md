@@ -27,9 +27,9 @@ This project is a part of the course "Introduction to Machine Learning" at Natio
 
 ## Contrubution
 
-- Yan-Fu Chen [@AaronChenNMNL](https://github.com/AaronChenNMNL) - Model design
-- Yi-Hsueh Chu [@Ethanzzzzz](https://github.com/Ethanzzzzz) - Frontend design, Model evaluation
-- Sheng-You Chien [@s111062111](https://github.com/s111062111) - Model design
-- Yi-Ning Chang [@Chang-Yining](https://github.com/Chang-Yining) - API design, Presentation
-- Bo-Yi Mao [@Dogeon188](https://github.com/Dogeon188) - Frontend design, Framework setup
-- Jie-Hung Chen [@JieHongChen](https://github.com/JieHongChen) - Model design, Model evaluation
+- Yan-Fu Chen [@AaronChenNMNL](https://github.com/AaronChenNMNL) - research study, methodology design.
+- Sheng-You Chien [@s111062111](https://github.com/s111062111) - methodology design, result analysis.
+- Yi-Ning Chang [@Chang-Yining](https://github.com/Chang-Yining) - result analysis, proposal presentation, evaluation metrics.
+- Jie-Hung Chen [@JieHongChen](https://github.com/JieHongChen) - methodology design, evaluation metrics.
+- Yi-Hsueh Chu [@Ethanzzzzz](https://github.com/Ethanzzzzz) - study research, data curation.
+- Bo-Yi Mao [@Dogeon188](https://github.com/Dogeon188) - data curation, video presentation, project outline.
