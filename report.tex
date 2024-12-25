@@ -11,7 +11,7 @@
 
 \begin{document}
 
-\title{Multi-Target Trading Automation with Deep Q Learning}
+\title{StockSense: Multi-Target Trading Automation with Deep Reinforcement Learning}
 
 \author{
   \IEEEauthorblockN{Yan-Fu Chen}
@@ -72,94 +72,38 @@
 \end{abstract}
 
 \begin{IEEEkeywords}
-  deep reinforcement learning, deep Q-network, stock trading,
-  algorithmic trading
+  deep reinforcement learning, deep Q-network, stock trading, algorithmic trading
 \end{IEEEkeywords}
 
 \section{Introduction}
 
-An automatic, algorithmic way of stock trading, leveraging the
-swiftness and accuracy of computer systems, has long been a persuit
-of many. With the rise of machine learning and deep learning, the
-possibility of using these technologies to predict stock prices and
-make trading decisions has become a reality.
+An automatic, algorithmic way of stock trading, leveraging the swiftness and accuracy of computer systems, has long been a persuit of many. With the rise of machine learning and deep learning, the possibility of using these technologies to predict stock prices and make trading decisions has become a reality.
 
 % 毛
 
 \section{Related Works}
 
-Even though the Efficient Market Hypothesis (EMH) posits that stock
-prices reflect all available information, and thus cannot be
-predicted consistently, many studies have shown that stock prices
-exhibit predictable patterns and can be forecasted to some extent.
-Various approaches have been proposed, differing in learning
-algorithms and objectives. In recent years, deep reinforcement
-learning (DRL) has gained significant attention due to its ability to
-learn complex trading strategies directly from market data.
+Even though the Efficient Market Hypothesis (EMH) posits that stock prices reflect all available information, and thus cannot be predicted consistently, many studies have shown that stock prices exhibit predictable patterns and can be forecasted to some extent. Various approaches have been proposed, differing in learning algorithms and objectives. In recent years, deep reinforcement learning (DRL) has gained significant attention due to its ability to learn complex trading strategies directly from market data.
 
 \subsection{Stock Price Prediction}
 
-Most studies have focused on predicting stock prices using various
-machine learning models. Traditional statistical methods such as
-ARIMA and GARCH have been widely used for time series forecasting.
-However, financial time series are often non-stationary and exhibit
-volatility changes, making it challenging to capture their underlying
-patterns with smoothened models.
+Most studies have focused on predicting stock prices using various machine learning models. Traditional statistical methods such as ARIMA and GARCH have been widely used for time series forecasting. However, financial time series are often non-stationary and exhibit volatility changes, making it challenging to capture their underlying patterns with smoothened models.
 
-With the advent of machine learning and deep learning, more
-sophisticated models have been developed. Convolutional Neural
-Networks (CNNs) and Recurrent Neural Networks (RNNs), including Long
-Short-Term Memory (LSTM) networks, have shown promising results in
-stock price prediction. These models can automatically extract
-relevant features from raw data and capture temporal dependencies,
-making them well-suited for financial time series analysis.
+With the advent of machine learning and deep learning, more sophisticated models have been developed. Convolutional Neural Networks (CNNs) and Recurrent Neural Networks (RNNs), including Long Short-Term Memory (LSTM) networks, have shown promising results in stock price prediction. These models can automatically extract relevant features from raw data and capture temporal dependencies, making them well-suited for financial time series analysis.
 
-Support Vector Machines (SVMs) have been applied to stock predictions
-in many works. Phayung et al. \cite{phayung2013} applied Support
-Vector Regression (SVR) and combines different windowing functions to
-predict stock prices. Their model showed good performance in
-predicting short-term stock prices. Similarly, Tripathy
-\cite{tripathy2019} demonstrated that SVMs are effective in highly
-volatile markets, and it performs better in short-term and
-medium-term predictions compared to long-term predictions. Also,
-Zhang et al. \cite{zhang2017} proposed a periodic updating SVM model
-that can adapt to changing market conditions, which showed
-competitive performance compared to the random walk model proposed by the EMH.
+Support Vector Machines (SVMs) have been applied to stock predictions in many works. Phayung et al. \cite{phayung2013} applied Support Vector Regression (SVR) and combines different windowing functions to predict stock prices. Their model showed good performance in predicting short-term stock prices. Similarly, Tripathy \cite{tripathy2019} demonstrated that SVMs are effective in highly volatile markets, and it performs better in short-term and medium-term predictions compared to long-term predictions. Also, Zhang et al. \cite{zhang2017} proposed a periodic updating SVM model that can adapt to changing market conditions, which showed competitive performance compared to the random walk model proposed by the EMH.
 
-Zhang et al. \cite{zhang2017} proposed a State Frequency Memory (SFM)
-recurrent neural network to capture the multi-frequency trading
-patterns in stock prices. They demonstrated that their model showed
-competitive performance compared to traditional methods. Fischer and
-Krauss \cite{fischer2018} applied LSTM networks to rank stocks based
-on their future returns and showed that their model could outperform
-traditional ranking methods.
+Zhang et al. \cite{zhang2017} proposed a State Frequency Memory (SFM) recurrent neural network to capture the multi-frequency trading patterns in stock prices. They demonstrated that their model showed competitive performance compared to traditional methods. Fischer and Krauss \cite{fischer2018} applied LSTM networks to rank stocks based on their future returns and showed that their model could outperform traditional ranking methods.
 
-More advanced models have also been applied to stock price prediction
-in recent years. Feng et al. \cite{feng2019an} proposed an
-adversarial learning framework that outperformed SOTA methods in
-terms of prediction accuracy. Koa et al. \cite{koa2023} developed a
-combination of Variational Autoencoders (VAEs) and diffusion models
-to capture the latent structure of financial time series. Gao et al.
-\cite{gao2023} proposed a transformer-based model that outperformed
-traditional methods in terms of portfolio returns and Sharpe ratios.
+More advanced models have also been applied to stock price prediction in recent years. Feng et al. \cite{feng2019an} proposed an adversarial learning framework that outperformed SOTA methods in terms of prediction accuracy. Koa et al. \cite{koa2023} developed a combination of Variational Autoencoders (VAEs) and diffusion models to capture the latent structure of financial time series. Gao et al. \cite{gao2023} proposed a transformer-based model that outperformed traditional methods in terms of portfolio returns and Sharpe ratios.
 
 \subsection{Algorithmic Trading}
 
-Despite these advancements in stock price prediction, they are
-usually evaluated on historical data and do not consider the trading
-strategy's performance in real-world scenarios. Such problem has been
-addressed by Feng et al. \cite{feng2019rank} who proposed an improved
-ranking model that can generate trading signals based on the
-predicted stock returns. Importantly, they considered the
-relationship between different stocks that conveys valuable
-information for trading decisions.
+Despite these advancements in stock price prediction, they are usually evaluated on historical data and do not consider the trading strategy's performance in real-world scenarios. Such problem has been addressed by Feng et al. \cite{feng2019rank} who proposed an improved ranking model that can generate trading signals based on the predicted stock returns. Importantly, they considered the relationship between different stocks that conveys valuable information for trading decisions.
 
-% (RL & DQN) 朱
-% Summarize the works that use RL and DQN for stock trading
+Deep reinforcement learning (DRL) is capable of learning complex trading strategies directly from market data, making it an attractive approach for algorithmic trading. For example, Deep Q-Learning (DQN) has been widely applied to stock trading for decision-making in dynamic and uncertain environments.
 
-\subsection{Summarization}
-
-So, while many studies have focused on predicting stock prices using various machine learning models, few have considered the trading strategy's performance in real-world scenarios. This is where deep reinforcement learning (DRL) comes in. DRL has gained significant attention due to its ability to learn complex trading strategies directly from market data. Deep Q-Learning (DQN) has been widely applied to stock trading for decision-making in dynamic and uncertain environments. 
+% Gu et al. \cite{gu2018} proposed a deep Q-learning framework for stock trading, which outperformed traditional methods in terms of portfolio returns and Sharpe ratios. Jiang et al. \cite{jiang2017} developed a deep reinforcement learning model that can adapt to changing market conditions and showed competitive performance compared to traditional methods.
 
 \textbf{Notable Frameworks and Tools:}
 \begin{itemize}
@@ -187,11 +131,11 @@ The proposed multi-target trading architecture is designed to handle multiple st
 Reinforcement learning is based on the interaction between an \textbf{agent} and an \textbf{environment}. The agent observes the state of the environment, takes actions, and receives rewards based on the results of those actions. The goal of the agent is to learn an optimal policy that maximizes the cumulative reward over time.
 
 \begin{itemize}
-    \item \textbf{State ($S_t$)}: Represents the information observed by the agent from the environment at time $t$.
-    \item \textbf{Action ($A_t$)}: The decision made by the agent at time $t$, such as buying, selling, or holding stocks.
-    \item \textbf{Reward ($R_t$)}: A scalar feedback signal that evaluates the action taken by the agent in a specific state.
-    \item \textbf{Policy ($\pi$)}: A mapping from states to actions, guiding the agent's decision-making process.
-    \item \textbf{Q-Function ($Q(s, a)$)}: Represents the expected cumulative reward of taking action $a$ in state $s$ and following the policy thereafter.
+  \item \textbf{State ($S_t$)}: Represents the information observed by the agent from the environment at time $t$.
+  \item \textbf{Action ($A_t$)}: The decision made by the agent at time $t$, such as buying, selling, or holding stocks.
+  \item \textbf{Reward ($R_t$)}: A scalar feedback signal that evaluates the action taken by the agent in a specific state.
+  \item \textbf{Policy ($\pi$)}: A mapping from states to actions, guiding the agent's decision-making process.
+  \item \textbf{Q-Function ($Q(s, a)$)}: Represents the expected cumulative reward of taking action $a$ in state $s$ and following the policy thereafter.
 \end{itemize}
 
 We use advanced RL algorithms such as \textit{Deep Q-Network (DQN)}, \textit{Advantage Actor-Critic (A2C)}, and \textit{Proximal Policy Optimization (PPO)} to train our agents.
@@ -201,8 +145,8 @@ We use advanced RL algorithms such as \textit{Deep Q-Network (DQN)}, \textit{Adv
 The environment simulates a stock market, incorporating realistic features such as price changes, transaction costs, and investment constraints. It provides the agent with state information derived from historical market data, enabling the agent to learn and make trading decisions.
 
 \begin{itemize}
-    \item \textbf{Data Source}: We use Yahoo! Finance's API to fetch stock market data. The dataset spans from 2000 to 2022 for training and from January 1, 2023, to December 1, 2024, for testing. The data includes the daily open, high, low, close prices, and trading volume for each stock.
-    \item \textbf{Implementation}: The environment is implemented by extending the Gymnasium \texttt{Env} class, allowing seamless integration with reinforcement learning frameworks.
+  \item \textbf{Data Source}: The environment accepts a list of Pandas DataFrames containing historical stock price data for multiple assets. For each DataFrame, the columns represent the OHLCV data (open, high, low, close prices, and trading volume) at each time step.
+  \item \textbf{Implementation}: The environment is implemented by extending the Gymnasium \texttt{Env} class, allowing seamless integration with reinforcement learning frameworks.
 \end{itemize}
 
 \subsection{State Representation}
@@ -210,12 +154,12 @@ The environment simulates a stock market, incorporating realistic features such 
 The state representation is critical for effective learning. Since raw stock market data varies greatly in scale and lacks direct interpretability, we preprocess and normalize it into meaningful features:
 
 \begin{itemize}
-    \item \textbf{Normalized Price Features}:
+  \item \textbf{Normalized Price Features}:
     \begin{align*}
-    \text{Open\%} &= \frac{\text{Open}}{\text{Close}}, \quad \text{High\%} = \frac{\text{High}}{\text{Close}}, \quad \text{Low\%} = \frac{\text{Low}}{\text{Close}}
+      \text{Open\%} &= \frac{\text{Open}}{\text{Close}}, \quad \text{High\%} = \frac{\text{High}}{\text{Close}}, \quad \text{Low\%} = \frac{\text{Low}}{\text{Close}}
     \end{align*}
-    \item \textbf{Percentage Change of Close}: Measures the relative change in the close price compared to the previous day.
-    \item \textbf{Normalized Volume}: Volume as a percentage of the maximum trading volume within a specified time window (100 days).
+  \item \textbf{Percentage Change of Close}: Measures the relative change in the close price compared to the previous day.
+  \item \textbf{Normalized Volume}: Volume as a percentage of the maximum trading volume within a specified time window (100 days).
 \end{itemize}
 
 The agent observes the last five days of these features, creating a sliding window of information to capture short-term trends.
@@ -225,8 +169,8 @@ The agent observes the last five days of these features, creating a sliding wind
 The action space defines how the agent interacts with the environment. In our implementation, we support two modes of trading actions:
 
 \begin{enumerate}
-    \item \textbf{All-In Mode}: The agent selects a single stock to allocate 100\% of its capital.
-    \item \textbf{Proportional Allocation Mode}: The agent determines the percentage of capital to allocate across multiple stocks, enabling diversified strategies.
+  \item \textbf{All-In Mode}: The agent selects a single stock to allocate 100\% of its capital.
+  \item \textbf{Proportional Allocation Mode}: The agent determines the percentage of capital to allocate across multiple stocks, enabling diversified strategies.
 \end{enumerate}
 
 This flexibility allows the agent to explore both high-risk and balanced investment strategies.
@@ -235,7 +179,7 @@ This flexibility allows the agent to explore both high-risk and balanced investm
 
 We use the \textbf{logarithmic gain ratio} as the reward function to evaluate the performance of the agent's decisions. This reward structure emphasizes proportional gains, penalizes losses, and encourages consistent growth. The reward for a given action is calculated as:
 \begin{align*}
-R_t = \log\left(\frac{\text{Portfolio Value}_{t}}{\text{Portfolio Value}_{t-1}}\right)
+  R_t = \log\left(\frac{\text{Portfolio Value}_{t}}{\text{Portfolio Value}_{t-1}}\right)
 \end{align*}
 
 This formulation accounts for transaction costs and ensures that the agent focuses on maximizing net returns.
@@ -245,9 +189,9 @@ This formulation accounts for transaction costs and ensures that the agent focus
 To solve the trading problem effectively, we utilize three reinforcement learning algorithms:
 
 \begin{itemize}
-    \item \textbf{Deep Q-Network (DQN)}: Uses a neural network to approximate the Q-function. It is particularly effective for discrete action spaces and leverages experience replay and target networks for stability.
-    \item \textbf{Advantage Actor-Critic (A2C)}: A policy-gradient method that combines value-based and policy-based approaches. It learns both a value function (critic) and a policy (actor) simultaneously, enabling efficient exploration.
-    \item \textbf{Proximal Policy Optimization (PPO)}: A robust and scalable policy-gradient method. It improves training stability by constraining policy updates to avoid drastic changes, ensuring better convergence.
+  \item \textbf{Deep Q-Network (DQN)}: Uses a neural network to approximate the Q-function. It is particularly effective for discrete action spaces and leverages experience replay and target networks for stability.
+  \item \textbf{Advantage Actor-Critic (A2C)}: A policy-gradient method that combines value-based and policy-based approaches. It learns both a value function (critic) and a policy (actor) simultaneously, enabling efficient exploration.
+  \item \textbf{Proximal Policy Optimization (PPO)}: A robust and scalable policy-gradient method. It improves training stability by constraining policy updates to avoid drastic changes, ensuring better convergence.
 \end{itemize}
 
 Each algorithm is trained to optimize portfolio returns while managing risks and transaction costs.
@@ -261,19 +205,32 @@ Each algorithm is trained to optimize portfolio returns while managing risks and
 
 \subsection{Dataset}
 
-% 朱 毛
-% Introduce the dataset used, and how it is preprocessed
+We obtained the stock price data from Yahoo! Finance \cite{yahoofinance} using the yfinance Python library \cite{yfinance}, and preprocess the data to fit the requirements of our trading environment. The dataset used in our experiments includes the daily OHLCV data for the following stocks: Microsoft (MSFT), Apple (AAPL), American Express (AXP), Amgen (AMGN), Cisco Systems (CSCO), Honeywell (HON), IBM (IBM), and Coca-Cola (KO). It contains data points spanning from January 1, 2000 to December 1, 2024.
+
+The dataset is split into three parts:
+\begin{itemize}
+  \item Training Data: First 70\% of the data (from January 1, 2000 to June 12, 2017).
+  \item Validation Data: Next 10\% of the data (from June 13, 2017 to December 6, 2019).
+  \item Testing Data: Last 20\% of the data (from December 7, 2019 to December 1, 2024).
+\end{itemize}
+
+The training data is used to train the reinforcement learning models, while the validation data is used to tune hyperparameters and prevent overfitting. The testing data is used to evaluate the performance of the trained models. 
+
+To visualize the historical stock prices used in our experiments, we plot the closing prices of the selected stocks over the entire dataset period in Figure \ref{fig:price_history}.
+
+\begin{figure}[htbp]
+  \centerline{\includegraphics[width=0.5\textwidth]{figs/prices.png}}
+  \caption{Historical closing prices of selected stocks from January 1, 2000 to December 1, 2024.}
+  \label{fig:price_history}
+\end{figure}
 
 \subsection{Evaluation Metrics}
 
 % 張 簡
 % Introduce the evaluation metrics used
-Backtesting is a common method to evaluate the performance of a predictive model in the financial domain.
-It simulates the trading strategy on historical data to estimate the strategy's performance.
+Backtesting is a common method to evaluate the performance of a predictive model in the financial domain. It simulates the trading strategy on historical data to estimate the strategy's performance.
 
-We use FinRL \cite{liu2022finrldeepreinforcementlearning}, a powerful deep reinforcement learning library to backtest our trading strategy.
-Our reinforcement learning model is compared with the buy-and-hold strategy, which buys and holds the stock for the entire trading period, on the DJI Index.
-DJI Index is a stock market index that measures the stock performance of 30 large companies listed on stock exchanges in the United States.
+We use FinRL \cite{liu2022finrldeepreinforcementlearning}, a powerful deep reinforcement learning library to perform backtest on our trading strategy. Our reinforcement learning model is compared with the buy-and-hold strategy, which buys and holds the stock for the entire trading period, on the DJI Index. DJI Index is a stock market index that measures the stock performance of 30 large companies listed on stock exchanges in the United States.
 
 Our models are evaluated based on the following metrics:
 \begin{itemize}
@@ -352,9 +309,7 @@ Our models are evaluated based on the following metrics:
 
 \section{Data and Code Availability}
 
-Stock price data used in this study is publicly available from Yahoo! Finance \cite{yahoofinance}, and is obtained using the yfinance Python library \cite{yfinance}.
-
-Cryptocurrency price data is obtained from the Binance API \cite{binanceapi} using the ccxt Python library \cite{ccxt}.
+Stock price data used in this study is publicly available from Yahoo! Finance \cite{yahoofinance}, and is obtained using the yfinance Python library \cite{yfinance}. Cryptocurrency price data is obtained from the Binance API \cite{binanceapi} using the ccxt Python library \cite{ccxt}.
 
 All code for data fetching, data preprocessing, model training, and evaluation is available at \url{https://github.com/Dogeon188/StockSense}. Any updates or changes to the code will be reflected in the GitHub repository.
 
