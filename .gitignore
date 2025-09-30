@@ -172,7 +172,6 @@ logs/
 *.fls
 *.synctex.gz
 *.synctex(busy)
-*.pdf
 *.cls
 *.bbl
 *.blg
